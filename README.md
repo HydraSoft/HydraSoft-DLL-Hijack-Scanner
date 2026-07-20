@@ -33,7 +33,7 @@
   </p>
   
   <p>
-    <img src="https://raw.githubusercontent.com/ZeroDayVPN/ZerroDay-DLL-Hijack-Scanner/master/Robber.png" alt="Robber GUI Interface" style="max-width: 100%;">
+    <img src="https://raw.githubusercontent.com/HydraSoft/HydraSoft-DLL-Hijack-Scanner/master/Robber.png" alt="Robber GUI Interface" style="max-width: 100%;">
   </p>
 
   <h3>🎨 Custom Rating Configuration</h3>
