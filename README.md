@@ -15,7 +15,7 @@
   <p>
     I built <strong>HydraSoft</strong> because I needed a fast, dependency-free, and open-source tool to hunt for DLL hijacking vulnerabilities across Windows environments. When Windows applications load dynamic-link libraries (DLLs), they follow a strict search order—starting with the executable's own directory, then moving to System32, the Windows folder, and finally the PATH environment variables. 
     <br><br>
-    If an application attempts to load a DLL that doesn't exist in a protected system directory, and I have write permissions to an earlier directory in that search chain, I can drop a malicious payload. ZerroDay automates this entire discovery process. It walks through directory trees, analyzes Portable Executable (PE) import tables, cross-references them with files actually present on the disk, and pinpoints exact hijacking opportunities.
+    If an application attempts to load a DLL that doesn't exist in a protected system directory, and I have write permissions to an earlier directory in that search chain, I can drop a malicious payload. HydraSoft automates this entire discovery process. It walks through directory trees, analyzes Portable Executable (PE) import tables, cross-references them with files actually present on the disk, and pinpoints exact hijacking opportunities.
   </p>
 
   <h3>🎯 Core Philosophy</h3>
