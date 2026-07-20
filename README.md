@@ -1,6 +1,6 @@
 
 <article class="markdown-body entry-content container-lg" itemprop="text">
-  <h1>🔓 ZerroDay: Advanced DLL Hijack Scanner</h1>
+  <h1>🔓 HydraSoft: Advanced DLL Hijack Scanner</h1>
 
   <p><strong>Streamlined Vulnerability Discovery for Windows Privilege Escalation</strong></p>
 
