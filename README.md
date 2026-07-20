@@ -13,7 +13,7 @@
 
   <h2>🧠 Conceptual Overview</h2>
   <p>
-    I built <strong>ZerroDayEvil</strong> because I needed a fast, dependency-free, and open-source tool to hunt for DLL hijacking vulnerabilities across Windows environments. When Windows applications load dynamic-link libraries (DLLs), they follow a strict search order—starting with the executable's own directory, then moving to System32, the Windows folder, and finally the PATH environment variables. 
+    I built <strong>HydraSoft</strong> because I needed a fast, dependency-free, and open-source tool to hunt for DLL hijacking vulnerabilities across Windows environments. When Windows applications load dynamic-link libraries (DLLs), they follow a strict search order—starting with the executable's own directory, then moving to System32, the Windows folder, and finally the PATH environment variables. 
     <br><br>
     If an application attempts to load a DLL that doesn't exist in a protected system directory, and I have write permissions to an earlier directory in that search chain, I can drop a malicious payload. ZerroDay automates this entire discovery process. It walks through directory trees, analyzes Portable Executable (PE) import tables, cross-references them with files actually present on the disk, and pinpoints exact hijacking opportunities.
   </p>
@@ -21,7 +21,7 @@
   <h3>🎯 Core Philosophy</h3>
   <p>
     <em>"Find the missing link in the execution chain."</em><br>
-    I designed ZerroDayEvil to eliminate the noise. Instead of manually running Process Monitor (ProcMon) and sifting through thousands of "NAME NOT FOUND" events, this tool statically analyzes binaries at rest and provides immediate, actionable intelligence for Red Team operations.
+    I designed HydraSoft to eliminate the noise. Instead of manually running Process Monitor (ProcMon) and sifting through thousands of "NAME NOT FOUND" events, this tool statically analyzes binaries at rest and provides immediate, actionable intelligence for Red Team operations.
   </p>
 
   <hr>
@@ -184,6 +184,6 @@
 
   <hr>
 
-  <p><em>ZerroDayEvil — Systematically dismantling Windows execution chains.</em></p>
+  <p><em>HydraSoft — Systematically dismantling Windows execution chains.</em></p>
 </article>
 
