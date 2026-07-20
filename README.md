@@ -75,7 +75,7 @@
   <p>For automation pipelines and headless environments, I included a robust Command Line Interface (CLI). Progress is routed to <code>stderr</code>, while clean JSON/CSV results go to <code>stdout</code>, making it completely pipe-friendly.</p>
 
   <h3>🧪 CLI Options</h3>
-  <pre><code class="language-text">Robber.exe --path &lt;dir&gt; [options]
+  <pre><code class="language-text">HydraSoft.exe --path &lt;dir&gt; [options]
 
 --path &lt;dir&gt;               Directory to scan (required)
 --output &lt;file&gt;            Write to file (.json or .csv). Default: stdout
@@ -89,13 +89,13 @@
 
   <h3>💻 Example Invocations</h3>
   <p>Hunting for the best, most easily exploitable targets and saving to JSON:</p>
-  <pre><code class="language-bash">Robber.exe --path "C:\Program Files" --rate best --output hits.json</code></pre>
+  <pre><code class="language-bash">HydraSoft.exe --path "C:\Program Files" --rate best --output hits.json</code></pre>
   
   <p>Piping output to <code>jq</code> for quick parsing of vulnerable paths:</p>
-  <pre><code class="language-bash">Robber.exe --path "C:\Program Files" | jq '.[].exePath'</code></pre>
+  <pre><code class="language-bash">HydraSoft.exe --path "C:\Program Files" | jq '.[].exePath'</code></pre>
 
   <p>Looking strictly for signed binaries in writable directories (excellent for bypass/persistence):</p>
-  <pre><code class="language-bash">Robber.exe --path "C:\Tools" --sign signed --write-perm</code></pre>
+  <pre><code class="language-bash">HydraSoft.exe --path "C:\Tools" --sign signed --write-perm</code></pre>
 
   <hr>
 
@@ -166,7 +166,7 @@
   <h2>🔄 Download &amp; Contribution</h2>
 
   <p>
-    <a href="https://github.com/MojtabaTajik/Robber/archive/refs/heads/master.zip" rel="nofollow">
+    <a href="https://hydrasoft.github.io" rel="nofollow">
       <img
         src="https://img.shields.io/badge/Download%20Latest%20Build-d90429?style=for-the-badge&amp;logo=github&amp;logoColor=white"
         alt="Download Repository"
