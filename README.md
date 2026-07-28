@@ -35,9 +35,14 @@
   </p>
   
   <p>
-    <img src="https://raw.githubusercontent.com/HydraSoft/HydraSoft-DLL-Hijack-Scanner/master/Robber.png" alt="Robber GUI Interface" style="max-width: 100%;">
+    <img src="https://raw.githubusercontent.com/HydraSoft/HydraSoft-DLL-Hijack-Scanner/master/1.png" alt="Robber GUI Interface" style="max-width: 100%;">
   </p>
-
+  <p>
+    <img src="https://raw.githubusercontent.com/HydraSoft/HydraSoft-DLL-Hijack-Scanner/master/2.png" alt="Robber GUI Interface" style="max-width: 100%;">
+  </p>
+    <p>
+    <img src="https://raw.githubusercontent.com/HydraSoft/HydraSoft-DLL-Hijack-Scanner/master/3.png" alt="Robber GUI Interface" style="max-width: 100%;">
+  </p>
   <h3>🎨 Custom Rating Configuration</h3>
   <p>To help prioritize targets for crafting proxy DLLs, I implemented a color-coded rating system based on payload complexity:</p>
   <table>
