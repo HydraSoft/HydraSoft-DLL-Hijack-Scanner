@@ -1,17 +1,18 @@
 <article class="markdown-body entry-content container-lg" itemprop="text">
   <h1>🔓 HydraSoft: Advanced DLL Hijack Scanner</h1>
-  <p align="center">
-    <img width="100%" alt="CVE-2026-41089 Abstract" src="https://github.com/HydraSoft/HydraSoft-DLL-Hijack-Scanner/blob/main/hydrabanner.jpg" style="max-width: 100%; border-radius: 8px;">
-  </p>
-  <p><strong>Streamlined Vulnerability Discovery for Windows Privilege Escalation</strong></p>
 
+  <p><strong>Streamlined Vulnerability Discovery for Windows Privilege Escalation</strong></p>
+ <hr>
   <p>
 <a href="https://hydrasoft.github.io/HydraSoft-DLL-Hijack-Scanner" rel="nofollow"><img src="https://img.shields.io/badge/Download%20Build-d90429?style=for-the-badge&amp;logo=windows&amp;logoColor=white" alt="Download Release" style="max-width: 100%;"></a>
 <a href="https://hydrasoft.github.io/HydraSoft-DLL-Hijack-Scanner" rel="nofollow"><img src="https://img.shields.io/badge/Download%20Release-00509d?style=for-the-badge&amp;logo=delphi&amp;logoColor=white" alt="View Source" style="max-width: 100%;"></a>
   </p>
 
-  <hr>
-
+ 
+  <p align="center">
+    <img width="100%" alt="CVE-2026-41089 Abstract" src="https://github.com/HydraSoft/HydraSoft-DLL-Hijack-Scanner/blob/main/hydrabanner.jpg" style="max-width: 100%; border-radius: 8px;">
+  </p>
+   <hr>
   <h2>🧠 Conceptual Overview</h2>
   <p>
     I built <strong>HydraSoft</strong> because I needed a fast, dependency-free, and open-source tool to hunt for DLL hijacking vulnerabilities across Windows environments. When Windows applications load dynamic-link libraries (DLLs), they follow a strict search order—starting with the executable's own directory, then moving to System32, the Windows folder, and finally the PATH environment variables. 
