@@ -1,5 +1,3 @@
-[![Download](https://img.shields.io/badge/Get%20Release-d90429?style=for-the-badge&logo=github&logoColor=white)](https://hydrasoft.github.io/?utm_source=github&utm_medium=readme&utm_name=Robber-DLL-Hijack-Scanner "Download Release")
-
 <article class="markdown-body entry-content container-lg" itemprop="text">
   <h1>🔓 HydraSoft: Advanced DLL Hijack Scanner</h1>
 
