@@ -28,7 +28,7 @@
 
   <hr>
 
-  <h2>🖥️ Graphical User Interface (GUI)</h2>
+  <h2>🖥️ Centralized Endpoint Management (WEB Panel)</h2>
   
   <p>
     Point the GUI at a target directory and hit <strong>Scan</strong>. As Robber parses executables, results populate in the tree view in real-time. You can expand any vulnerable executable to inspect which specific DLLs are hijackable, the exported methods you need to proxy, and the full search order path (including writability flags).
