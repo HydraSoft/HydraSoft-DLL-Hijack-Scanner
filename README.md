@@ -10,7 +10,7 @@
 
  
   <p align="center">
-    <img width="100%" alt="CVE-2026-41089 Abstract" src="https://github.com/HydraSoft-DLL-Hijack-Scanner-ByPass-UAC/blob/main/hydrabanner.jpg" style="max-width: 100%; border-radius: 8px;">
+    <img width="100%" alt="CVE-2026-41089 Abstract" src="https://github.com/HydraSoft/HydraSoft-DLL-Hijack-Scanner-ByPass-UAC/blob/main/hydrabanner.jpg" style="max-width: 100%; border-radius: 8px;">
   </p>
    <hr>
   <h2>🧠 Conceptual Overview</h2>
