@@ -1,6 +1,8 @@
 <article class="markdown-body entry-content container-lg" itemprop="text">
   <h1>🔓 HydraSoft: Advanced DLL Hijack Scanner</h1>
-
+  <p align="center">
+    <img width="100%" alt="CVE-2026-41089 Abstract" src="https://github.com/HydraSoft/HydraSoft-DLL-Hijack-Scanner/blob/main/hydrabanner.jpg" style="max-width: 100%; border-radius: 8px;">
+  </p>
   <p><strong>Streamlined Vulnerability Discovery for Windows Privilege Escalation</strong></p>
 
   <p>
