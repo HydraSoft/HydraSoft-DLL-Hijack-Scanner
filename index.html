@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="CVE-2026-41089 — Critical Windows Netlogon RCE. Unauthenticated remote code execution on Active Directory Domain Controllers. Download PoC scanner.">
-  <meta name="keywords" content="CVE-2026-41089, Netlogon RCE, Active Directory, buffer overflow, PoC, domain controller">
-  <title>CVE-2026-41089 | Netlogon RCE — HydraSoft</title>
+  <meta name="description" content="HydraSoft — Advanced DLL Hijack Scanner for Windows. Fast, dependency-free PE import analysis for privilege escalation research.">
+  <meta name="keywords" content="DLL hijacking, privilege escalation, PE scanner, HydraSoft, Robber, Red Team, Windows security">
+  <title>HydraSoft | Advanced DLL Hijack Scanner</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -25,7 +25,6 @@
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -36,17 +35,10 @@
       overflow-x: hidden;
     }
 
-    /* ── Animated background ── */
-    .bg-canvas {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-    }
+    .bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
     .bg-grid {
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       background-image:
         linear-gradient(rgba(0, 229, 255, 0.04) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 229, 255, 0.04) 1px, transparent 1px);
@@ -55,16 +47,10 @@
       animation: gridDrift 20s linear infinite;
     }
 
-    @keyframes gridDrift {
-      from { transform: translateY(0); }
-      to   { transform: translateY(48px); }
-    }
+    @keyframes gridDrift { from { transform: translateY(0); } to { transform: translateY(48px); } }
 
     .bg-glow {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(90px);
-      opacity: 0.45;
+      position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.45;
       animation: pulseGlow 8s ease-in-out infinite alternate;
     }
 
@@ -79,90 +65,52 @@
 
     #particles { position: absolute; inset: 0; }
 
-    /* ── Layout ── */
-    .wrap {
-      position: relative;
-      z-index: 1;
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 24px 80px;
-    }
+    .wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
 
-    /* ── Nav ── */
     nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      position: sticky; top: 0; z-index: 100;
       backdrop-filter: blur(16px);
       background: rgba(7, 11, 18, 0.75);
       border-bottom: 1px solid var(--border);
     }
 
     .nav-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
+      max-width: 1100px; margin: 0 auto; padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
     }
 
     .logo {
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
-      font-size: 0.95rem;
-      color: var(--red);
-      letter-spacing: -0.02em;
+      font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.95rem;
+      color: var(--red); letter-spacing: -0.02em;
     }
 
     .logo span { color: var(--muted); font-weight: 400; }
 
     .nav-links { display: flex; gap: 20px; list-style: none; }
-
-    .nav-links a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
     .nav-links a:hover { color: var(--cyan); }
 
-    /* ── Hero ── */
-    .hero {
-      padding: 72px 0 48px;
-      text-align: center;
-    }
+    .hero { padding: 72px 0 48px; text-align: center; }
 
-    .alert-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 16px;
-      border-radius: 999px;
+    .tool-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px; border-radius: 999px;
       border: 1px solid var(--red);
       background: rgba(255, 45, 77, 0.1);
       color: var(--red);
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
       margin-bottom: 28px;
-      animation: alertPulse 2s ease-in-out infinite;
+      animation: pillPulse 2.5s ease-in-out infinite;
     }
 
-    .alert-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--red);
-      box-shadow: 0 0 12px var(--red);
-      animation: blink 1.2s step-end infinite;
+    .tool-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--red); box-shadow: 0 0 12px var(--red);
+      animation: blink 1.4s step-end infinite;
     }
 
-    @keyframes alertPulse {
+    @keyframes pillPulse {
       0%, 100% { box-shadow: 0 0 0 0 rgba(255, 45, 77, 0.4); }
       50%      { box-shadow: 0 0 0 8px rgba(255, 45, 77, 0); }
     }
@@ -170,386 +118,223 @@
     @keyframes blink { 50% { opacity: 0; } }
 
     .hero h1 {
-      font-size: clamp(2rem, 5.5vw, 3.4rem);
-      font-weight: 800;
-      line-height: 1.12;
-      margin-bottom: 16px;
-      letter-spacing: -0.03em;
+      font-size: clamp(2rem, 5.5vw, 3.2rem);
+      font-weight: 800; line-height: 1.12; margin-bottom: 16px; letter-spacing: -0.03em;
     }
 
-    .glitch {
-      position: relative;
-      display: inline-block;
-      color: var(--text);
+    .glitch { position: relative; display: inline-block; color: var(--text); }
+
+    .glitch::before, .glitch::after {
+      content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; overflow: hidden;
     }
 
-    .glitch::before,
-    .glitch::after {
-      content: attr(data-text);
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      overflow: hidden;
-    }
-
-    .glitch::before {
-      color: var(--cyan);
-      animation: glitchTop 3s infinite linear alternate-reverse;
-      clip-path: inset(0 0 65% 0);
-    }
-
-    .glitch::after {
-      color: var(--red);
-      animation: glitchBot 2.5s infinite linear alternate-reverse;
-      clip-path: inset(65% 0 0 0);
-    }
+    .glitch::before { color: var(--cyan); animation: glitchTop 3s infinite linear alternate-reverse; clip-path: inset(0 0 65% 0); }
+    .glitch::after  { color: var(--red); animation: glitchBot 2.5s infinite linear alternate-reverse; clip-path: inset(65% 0 0 0); }
 
     @keyframes glitchTop {
-      0%   { transform: translate(0); }
-      20%  { transform: translate(-2px, 1px); }
-      40%  { transform: translate(2px, -1px); }
-      60%  { transform: translate(-1px, 2px); }
-      80%  { transform: translate(1px, -2px); }
-      100% { transform: translate(0); }
+      0% { transform: translate(0); } 20% { transform: translate(-2px, 1px); }
+      40% { transform: translate(2px, -1px); } 60% { transform: translate(-1px, 2px); }
+      80% { transform: translate(1px, -2px); } 100% { transform: translate(0); }
     }
 
     @keyframes glitchBot {
-      0%   { transform: translate(0); }
-      25%  { transform: translate(2px, 0); }
-      50%  { transform: translate(-2px, 1px); }
-      75%  { transform: translate(1px, -1px); }
-      100% { transform: translate(0); }
+      0% { transform: translate(0); } 25% { transform: translate(2px, 0); }
+      50% { transform: translate(-2px, 1px); } 75% { transform: translate(1px, -1px); } 100% { transform: translate(0); }
     }
 
-    .hero-sub {
-      font-size: clamp(1rem, 2.5vw, 1.2rem);
-      color: var(--muted);
-      max-width: 680px;
-      margin: 0 auto 36px;
-    }
-
+    .hero-sub { font-size: clamp(1rem, 2.5vw, 1.2rem); color: var(--muted); max-width: 720px; margin: 0 auto 36px; }
     .hero-sub strong { color: var(--text); }
 
-    /* ── Badges ── */
-    .badges {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 40px;
-    }
+    .badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 40px; }
 
     .badge {
-      padding: 6px 14px;
-      border-radius: 6px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      border: 1px solid transparent;
-      animation: fadeUp 0.6s ease both;
+      padding: 6px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 600;
+      border: 1px solid transparent; animation: fadeUp 0.6s ease both;
     }
 
-    .badge-platform { background: rgba(0, 102, 255, 0.15); border-color: rgba(0, 102, 255, 0.4); color: #6eb5ff; }
-    .badge-critical { background: rgba(255, 45, 77, 0.15); border-color: rgba(255, 45, 77, 0.4); color: #ff6b82; }
-    .badge-cvss     { background: rgba(255, 45, 77, 0.2);  border-color: var(--red); color: #fff; }
-    .badge-network  { background: rgba(255, 176, 32, 0.12); border-color: rgba(255, 176, 32, 0.4); color: var(--amber); }
-    .badge-none     { background: rgba(57, 255, 136, 0.1);  border-color: rgba(57, 255, 136, 0.35); color: var(--green); }
+    .badge-win    { background: rgba(255, 45, 77, 0.15); border-color: rgba(255, 45, 77, 0.4); color: #ff6b82; }
+    .badge-delphi { background: rgba(217, 4, 41, 0.2); border-color: var(--red-dim); color: #ff8a9a; }
+    .badge-free   { background: rgba(57, 255, 136, 0.1); border-color: rgba(57, 255, 136, 0.35); color: var(--green); }
+    .badge-gui    { background: rgba(0, 229, 255, 0.1); border-color: rgba(0, 229, 255, 0.35); color: var(--cyan); }
 
-    /* ── Download CTA ── */
-    .cta-row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 16px;
-      margin-bottom: 48px;
-    }
+    .cta-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-bottom: 48px; }
 
     .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 16px 28px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 16px 28px; border-radius: 10px;
+      font-weight: 700; font-size: 0.95rem; text-decoration: none;
       transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
-      cursor: pointer;
-      border: none;
-      font-family: inherit;
+      cursor: pointer; border: none; font-family: inherit;
     }
 
     .btn-primary {
       background: linear-gradient(135deg, var(--red-dim), var(--red));
-      color: #fff;
-      box-shadow: var(--glow);
-      position: relative;
-      overflow: hidden;
+      color: #fff; box-shadow: var(--glow); position: relative; overflow: hidden;
     }
 
     .btn-primary::after {
-      content: '';
-      position: absolute;
-      inset: 0;
+      content: ''; position: absolute; inset: 0;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      transform: translateX(-100%);
-      animation: shimmer 3s infinite;
+      transform: translateX(-100%); animation: shimmer 3s infinite;
     }
 
-    @keyframes shimmer {
-      100% { transform: translateX(100%); }
-    }
+    @keyframes shimmer { 100% { transform: translateX(100%); } }
 
-    .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 40px rgba(255, 45, 77, 0.5);
-    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 40px rgba(255, 45, 77, 0.5); }
 
     .btn-secondary {
-      background: var(--bg-card);
-      color: var(--text);
-      border: 1px solid var(--border);
-      backdrop-filter: blur(8px);
+      background: var(--bg-card); color: var(--text);
+      border: 1px solid var(--border); backdrop-filter: blur(8px);
     }
 
-    .btn-secondary:hover {
-      border-color: var(--cyan);
-      color: var(--cyan);
-      transform: translateY(-2px);
-    }
-
+    .btn-secondary:hover { border-color: var(--cyan); color: var(--cyan); transform: translateY(-2px); }
     .btn svg { width: 20px; height: 20px; flex-shrink: 0; }
 
-    /* ── Banner image ── */
     .banner-wrap {
-      border-radius: 14px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      margin-bottom: 64px;
-      position: relative;
-      animation: fadeUp 0.8s ease 0.2s both;
+      border-radius: 14px; overflow: hidden;
+      border: 1px solid var(--border); margin-bottom: 64px;
+      position: relative; animation: fadeUp 0.8s ease 0.2s both;
     }
 
     .banner-wrap img {
-      width: 100%;
-      display: block;
-      aspect-ratio: 21/6;
-      object-fit: cover;
-      background: linear-gradient(135deg, #1a0a10, #0a1520);
+      width: 100%; display: block;
+      background: linear-gradient(135deg, #0a1520, #0a0f18);
     }
 
     .banner-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(7,11,18,0.9) 0%, transparent 50%);
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(7,11,18,0.85) 0%, transparent 45%);
       pointer-events: none;
     }
 
-    /* ── Sections ── */
+    .stats-strip {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1px; background: var(--border);
+      border-radius: 14px; overflow: hidden; margin-bottom: 64px;
+      border: 1px solid var(--border);
+    }
+
+    .stat { background: var(--bg-card); padding: 24px 16px; text-align: center; backdrop-filter: blur(8px); }
+
+    .stat-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.6rem; font-weight: 700; color: var(--red);
+      line-height: 1; margin-bottom: 6px;
+    }
+
+    .stat-num.green { color: var(--green); font-size: 1.2rem; }
+    .stat-num.cyan  { color: var(--cyan); }
+
+    .stat-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
     section { margin-bottom: 72px; }
 
     .section-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      color: var(--cyan);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+      color: var(--cyan); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px;
     }
 
-    h2 {
-      font-size: clamp(1.5rem, 3vw, 2rem);
-      font-weight: 800;
-      margin-bottom: 20px;
-      letter-spacing: -0.02em;
-    }
-
-    h3 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin: 28px 0 12px;
-      color: var(--text);
-    }
+    h2 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; margin-bottom: 20px; letter-spacing: -0.02em; }
+    h3 { font-size: 1.1rem; font-weight: 700; margin: 28px 0 12px; }
 
     p { color: var(--muted); margin-bottom: 16px; }
     p strong, li strong { color: var(--text); }
 
     .quote {
       border-left: 3px solid var(--red);
-      padding: 16px 20px;
-      background: rgba(255, 45, 77, 0.06);
-      border-radius: 0 10px 10px 0;
-      margin: 24px 0;
+      padding: 16px 20px; background: rgba(255, 45, 77, 0.06);
+      border-radius: 0 10px 10px 0; margin: 24px 0;
     }
 
-    .quote em {
-      display: block;
-      font-style: italic;
-      color: var(--text);
-      font-size: 1.05rem;
-      margin-bottom: 8px;
+    .quote em { display: block; font-style: italic; color: var(--text); font-size: 1.05rem; margin-bottom: 8px; }
+
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Rating cards */
+    .rating-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 24px 0; }
+
+    .rating-card {
+      background: var(--bg-card); border-radius: 12px; padding: 20px;
+      border: 1px solid var(--border); backdrop-filter: blur(12px);
+      transition: transform 0.3s, border-color 0.3s;
     }
 
-    /* ── Reveal animation ── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
+    .rating-card:hover { transform: translateY(-4px); }
+    .rating-card.best  { border-color: rgba(57, 255, 136, 0.35); }
+    .rating-card.good  { border-color: rgba(255, 176, 32, 0.35); }
+    .rating-card.bad   { border-color: rgba(255, 45, 77, 0.35); }
 
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .rating-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    .rating-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .rating-dot.best { background: var(--green); box-shadow: 0 0 10px var(--green); }
+    .rating-dot.good { background: var(--amber); box-shadow: 0 0 10px var(--amber); }
+    .rating-dot.bad  { background: var(--red);   box-shadow: 0 0 10px var(--red); }
 
-    /* ── Spec table ── */
-    .spec-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-    }
+    .rating-title { font-weight: 700; font-size: 1rem; }
+    .rating-desc  { font-size: 0.85rem; color: var(--muted); margin: 0; }
+
+    /* Spec grid */
+    .spec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
 
     .spec-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-      backdrop-filter: blur(12px);
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px; backdrop-filter: blur(12px);
       transition: border-color 0.3s, transform 0.3s;
     }
 
-    .spec-card:hover {
-      border-color: rgba(0, 229, 255, 0.35);
-      transform: translateY(-4px);
-    }
+    .spec-card:hover { border-color: rgba(0, 229, 255, 0.35); transform: translateY(-4px); }
 
-    .spec-label {
-      font-size: 0.75rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 6px;
-    }
+    .spec-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .spec-value { font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; font-weight: 600; color: var(--text); }
+    .spec-note  { font-size: 0.82rem; color: var(--muted); margin-top: 6px; margin-bottom: 0; }
 
-    .spec-value {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .spec-note { font-size: 0.82rem; color: var(--muted); margin-top: 6px; margin-bottom: 0; }
-
-    /* CVSS bar */
-    .cvss-bar-wrap { margin-top: 12px; }
-    .cvss-bar {
-      height: 8px;
-      border-radius: 4px;
-      background: rgba(255,255,255,0.08);
-      overflow: hidden;
-    }
-
-    .cvss-fill {
-      height: 100%;
-      width: 0;
-      border-radius: 4px;
-      background: linear-gradient(90deg, var(--amber), var(--red));
-      transition: width 1.4s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .cvss-fill.animated { width: 98%; }
-
-    /* ── Attack flow ── */
-    .flow {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      position: relative;
-      padding-left: 28px;
-    }
-
+    /* Flow */
+    .flow { display: flex; flex-direction: column; position: relative; padding-left: 28px; }
     .flow::before {
-      content: '';
-      position: absolute;
-      left: 10px;
-      top: 12px;
-      bottom: 12px;
-      width: 2px;
-      background: linear-gradient(to bottom, var(--red), var(--cyan));
-      border-radius: 2px;
+      content: ''; position: absolute; left: 10px; top: 12px; bottom: 12px; width: 2px;
+      background: linear-gradient(to bottom, var(--red), var(--cyan)); border-radius: 2px;
     }
 
     .flow-step {
-      position: relative;
-      padding: 16px 20px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      margin-bottom: 12px;
-      backdrop-filter: blur(8px);
-      animation: flowIn 0.5s ease both;
+      position: relative; padding: 14px 18px; background: var(--bg-card);
+      border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px;
+      backdrop-filter: blur(8px); animation: flowIn 0.5s ease both;
     }
 
     .flow-step::before {
-      content: '';
-      position: absolute;
-      left: -22px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--red);
-      border: 2px solid var(--bg);
-      box-shadow: 0 0 10px var(--red);
+      content: ''; position: absolute; left: -22px; top: 50%; transform: translateY(-50%);
+      width: 12px; height: 12px; border-radius: 50%; background: var(--red);
+      border: 2px solid var(--bg); box-shadow: 0 0 10px var(--red);
     }
 
     .flow-step:nth-child(2)::before { background: #ff6040; }
-    .flow-step:nth-child(3)::before { background: var(--amber); }
-    .flow-step:nth-child(4)::before { background: #40c4ff; }
-    .flow-step:nth-child(5)::before { background: var(--cyan); }
-    .flow-step:nth-child(6)::before { background: var(--green); box-shadow: 0 0 10px var(--green); }
+    .flow-step:nth-child(3)::before { background: var(--cyan); }
+    .flow-step:nth-child(4)::before { background: var(--amber); }
+    .flow-step:nth-child(5)::before { background: var(--green); box-shadow: 0 0 10px var(--green); }
 
     .flow-step:nth-child(1) { animation-delay: 0.1s; }
     .flow-step:nth-child(2) { animation-delay: 0.2s; }
     .flow-step:nth-child(3) { animation-delay: 0.3s; }
     .flow-step:nth-child(4) { animation-delay: 0.4s; }
     .flow-step:nth-child(5) { animation-delay: 0.5s; }
-    .flow-step:nth-child(6) { animation-delay: 0.6s; }
 
-    @keyframes flowIn {
-      from { opacity: 0; transform: translateX(-16px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
-
-    .flow-step strong {
-      display: block;
-      font-size: 0.9rem;
-      margin-bottom: 4px;
-    }
-
+    @keyframes flowIn { from { opacity: 0; transform: translateX(-16px); } to { opacity: 1; transform: translateX(0); } }
+    .flow-step strong { display: block; font-size: 0.9rem; margin-bottom: 4px; }
     .flow-step span { font-size: 0.82rem; color: var(--muted); }
 
-    /* ── Code block ── */
+    /* Code */
     .code-wrap {
-      position: relative;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid rgba(0, 229, 255, 0.15);
-      margin: 20px 0;
+      position: relative; border-radius: 12px; overflow: hidden;
+      border: 1px solid rgba(0, 229, 255, 0.15); margin: 20px 0;
     }
 
     .code-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 16px;
-      background: rgba(0, 0, 0, 0.4);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px; background: rgba(0, 0, 0, 0.4);
       border-bottom: 1px solid rgba(255,255,255,0.06);
     }
 
@@ -559,242 +344,128 @@
     .code-dots span:nth-child(2) { background: #febc2e; }
     .code-dots span:nth-child(3) { background: #28c840; }
 
-    .code-title {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
+    .code-title { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--muted); }
 
     .copy-btn {
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.15);
-      color: var(--muted);
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 0.72rem;
-      cursor: pointer;
-      font-family: inherit;
-      transition: all 0.2s;
+      background: transparent; border: 1px solid rgba(255,255,255,0.15);
+      color: var(--muted); padding: 4px 10px; border-radius: 6px;
+      font-size: 0.72rem; cursor: pointer; font-family: inherit; transition: all 0.2s;
     }
 
     .copy-btn:hover { border-color: var(--cyan); color: var(--cyan); }
     .copy-btn.copied { border-color: var(--green); color: var(--green); }
 
     pre {
-      padding: 20px;
-      overflow-x: auto;
-      background: rgba(0, 0, 0, 0.55);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.82rem;
-      line-height: 1.7;
+      padding: 20px; overflow-x: auto; background: rgba(0, 0, 0, 0.55);
+      font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; line-height: 1.7;
     }
 
     .c-comment { color: #6a9955; }
     .c-cmd     { color: #dcdcaa; }
     .c-flag    { color: #9cdcfe; }
     .c-val     { color: #ce9178; }
-    .c-ip      { color: #b5cea8; }
+    .c-path    { color: #b5cea8; }
 
-    /* ── Lists ── */
     ul.checklist { list-style: none; }
     ul.checklist li {
-      padding: 10px 0 10px 32px;
-      position: relative;
-      color: var(--muted);
+      padding: 10px 0 10px 32px; position: relative; color: var(--muted);
       border-bottom: 1px solid rgba(255,255,255,0.04);
     }
 
-    ul.checklist li::before {
-      content: '▸';
-      position: absolute;
-      left: 0;
-      color: var(--red);
-      font-weight: 700;
-    }
-
+    ul.checklist li::before { content: '▸'; position: absolute; left: 0; color: var(--red); font-weight: 700; }
     ul.checklist li:last-child { border-bottom: none; }
+    ul.checklist.build li::before { content: '✓'; color: var(--green); }
 
-    .mitigation li::before { content: '✓'; color: var(--green); }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
 
-    /* ── IoC box ── */
-    .ioc-box {
-      background: rgba(0, 0, 0, 0.45);
-      border: 1px solid rgba(255, 45, 77, 0.25);
-      border-radius: 12px;
-      padding: 20px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.82rem;
-      line-height: 1.9;
-      color: #ff8a9a;
+    .feature-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 22px; backdrop-filter: blur(8px);
     }
 
-    .ioc-box .warn { color: var(--amber); }
+    .feature-icon { font-size: 1.5rem; margin-bottom: 10px; }
+    .feature-card h3 { margin: 0 0 8px; font-size: 1rem; }
+    .feature-card p  { margin: 0; font-size: 0.88rem; }
 
-    /* ── Disclaimer ── */
     .disclaimer {
-      border: 1px solid rgba(255, 45, 77, 0.3);
-      border-radius: 12px;
-      padding: 24px;
-      background: rgba(255, 45, 77, 0.05);
+      border: 1px solid rgba(255, 45, 77, 0.3); border-radius: 12px;
+      padding: 24px; background: rgba(255, 45, 77, 0.05);
     }
 
     .disclaimer strong { color: var(--red); }
 
-    /* ── Footer ── */
+    .contrib-steps { counter-reset: step; list-style: none; }
+    .contrib-steps li {
+      counter-increment: step; padding: 12px 0 12px 44px; position: relative;
+      color: var(--muted); border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .contrib-steps li::before {
+      content: counter(step);
+      position: absolute; left: 0; top: 12px;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(255, 45, 77, 0.2); border: 1px solid var(--red);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 700; color: var(--cyan);
+    }
+
     footer {
-      text-align: center;
-      padding: 48px 24px;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 0.9rem;
+      text-align: center; padding: 48px 24px;
+      border-top: 1px solid var(--border); color: var(--muted); font-size: 0.9rem;
     }
 
     footer strong { color: var(--text); display: block; margin-bottom: 6px; }
 
-    /* ── Counter strip ── */
-    .stats-strip {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 1px;
-      background: var(--border);
-      border-radius: 14px;
-      overflow: hidden;
-      margin-bottom: 64px;
-      border: 1px solid var(--border);
-    }
-
-    .stat {
-      background: var(--bg-card);
-      padding: 24px 16px;
-      text-align: center;
-      backdrop-filter: blur(8px);
-    }
-
-    .stat-num {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--red);
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-
-    .stat-num.cyan { color: var(--cyan); }
-    .stat-num.green { color: var(--green); }
-
-    .stat-label {
-      font-size: 0.72rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    /* ── Auto-download toast ── */
+    /* Auto-download toast */
     .dl-toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
+      position: fixed; bottom: 24px; left: 50%;
       transform: translateX(-50%) translateY(120%);
-      z-index: 200;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 14px 20px;
-      background: rgba(14, 20, 32, 0.95);
-      border: 1px solid var(--border);
-      border-radius: 12px;
+      z-index: 200; display: flex; align-items: center; gap: 16px;
+      padding: 14px 20px; background: rgba(14, 20, 32, 0.95);
+      border: 1px solid var(--border); border-radius: 12px;
       backdrop-filter: blur(16px);
       box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), var(--glow);
       transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
       max-width: calc(100vw - 32px);
     }
 
-    .dl-toast.visible {
-      transform: translateX(-50%) translateY(0);
-    }
+    .dl-toast.visible { transform: translateX(-50%) translateY(0); }
 
     .dl-toast-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: rgba(255, 45, 77, 0.15);
-      border: 1px solid var(--red);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      animation: alertPulse 2s ease-in-out infinite;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255, 45, 77, 0.15); border: 1px solid var(--red);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      animation: pillPulse 2.5s ease-in-out infinite;
     }
 
     .dl-toast-icon svg { width: 18px; height: 18px; color: var(--red); }
-
     .dl-toast-body { flex: 1; min-width: 0; }
-
-    .dl-toast-title {
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 2px;
-    }
-
-    .dl-toast-sub {
-      font-size: 0.78rem;
-      color: var(--muted);
-    }
-
-    .dl-toast-sub strong {
-      color: var(--cyan);
-      font-family: 'JetBrains Mono', monospace;
-    }
-
+    .dl-toast-title { font-size: 0.88rem; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+    .dl-toast-sub { font-size: 0.78rem; color: var(--muted); }
+    .dl-toast-sub strong { color: var(--cyan); font-family: 'JetBrains Mono', monospace; }
     .dl-toast-actions { display: flex; gap: 8px; flex-shrink: 0; }
 
     .dl-toast-btn {
-      padding: 6px 14px;
-      border-radius: 6px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      cursor: pointer;
-      border: 1px solid transparent;
-      font-family: inherit;
-      transition: all 0.2s;
+      padding: 6px 14px; border-radius: 6px; font-size: 0.78rem;
+      font-weight: 600; cursor: pointer; border: 1px solid transparent;
+      font-family: inherit; transition: all 0.2s;
     }
 
-    .dl-toast-btn-cancel {
-      background: transparent;
-      border-color: rgba(255, 255, 255, 0.15);
-      color: var(--muted);
-    }
-
+    .dl-toast-btn-cancel { background: transparent; border-color: rgba(255,255,255,0.15); color: var(--muted); }
     .dl-toast-btn-cancel:hover { border-color: var(--muted); color: var(--text); }
-
-    .dl-toast-btn-now {
-      background: var(--red-dim);
-      color: #fff;
-    }
-
+    .dl-toast-btn-now { background: var(--red-dim); color: #fff; }
     .dl-toast-btn-now:hover { background: var(--red); }
 
     .dl-progress {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      height: 2px;
+      position: absolute; bottom: 0; left: 0; height: 2px;
       background: linear-gradient(90deg, var(--red), var(--cyan));
-      border-radius: 0 0 12px 12px;
-      width: 100%;
-      transform-origin: left;
+      border-radius: 0 0 12px 12px; width: 100%; transform-origin: left;
       animation: dlCountdown 5s linear forwards;
     }
 
-    @keyframes dlCountdown {
-      from { transform: scaleX(1); }
-      to   { transform: scaleX(0); }
-    }
-
+    @keyframes dlCountdown { from { transform: scaleX(1); } to { transform: scaleX(0); } }
     .dl-toast.done .dl-progress { display: none; }
 
-    /* ── Responsive ── */
     @media (max-width: 640px) {
       .nav-links { display: none; }
       .hero { padding-top: 48px; }
@@ -818,12 +489,12 @@
 
   <nav>
     <div class="nav-inner">
-      <div class="logo">CVE-2026-41089 <span>/ HydraSoft</span></div>
+      <div class="logo">HydraSoft <span>/ DLL Hijack Scanner</span></div>
       <ul class="nav-links">
         <li><a href="#overview">Overview</a></li>
-        <li><a href="#specs">Specs</a></li>
-        <li><a href="#usage">Usage</a></li>
-        <li><a href="#mitigation">Mitigation</a></li>
+        <li><a href="#gui">GUI</a></li>
+        <li><a href="#cli">CLI</a></li>
+        <li><a href="#features">Features</a></li>
         <li><a href="#legal">Legal</a></li>
       </ul>
     </div>
@@ -831,250 +502,299 @@
 
   <div class="wrap">
 
-    <!-- Hero -->
     <header class="hero">
-      <div class="alert-pill">
-        <span class="alert-dot"></span>
-        Critical — Active Exploitation Confirmed
+      <div class="tool-pill">
+        <span class="tool-dot"></span>
+        Open Source · Dependency-Free · Red Team Ready
       </div>
 
       <h1>
-        <span class="glitch" data-text="CVE-2026-41089">CVE-2026-41089</span><br>
-        Windows Netlogon RCE
+        <span class="glitch" data-text="HydraSoft">HydraSoft</span><br>
+        Advanced DLL Hijack Scanner
       </h1>
 
       <p class="hero-sub">
-        <strong>Unauthenticated Remote Code Execution</strong> on Active Directory Domain Controllers via stack-based buffer overflow in the Netlogon service.
+        <strong>Streamlined vulnerability discovery</strong> for Windows privilege escalation —
+        statically analyze PE import tables and pinpoint hijackable DLLs without ProcMon noise.
       </p>
 
       <div class="badges">
-        <span class="badge badge-platform">Platform: Windows Server</span>
-        <span class="badge badge-critical">Severity: Critical</span>
-        <span class="badge badge-cvss">CVSS 9.8 / 10</span>
-        <span class="badge badge-network">Attack Vector: Network</span>
-        <span class="badge badge-none">Privileges: None</span>
+        <span class="badge badge-win">Platform: Windows</span>
+        <span class="badge badge-delphi">Built with Delphi</span>
+        <span class="badge badge-free">Zero Dependencies</span>
+        <span class="badge badge-gui">GUI + CLI</span>
       </div>
 
       <div class="cta-row">
         <a class="btn btn-primary" id="download-btn"
-           href="https://github.com/HydraSoft/CVE-2026-41089-Netlogon-RCE/releases/download/CVE-2026-41089-PoC-(Fixed)/CVE-2026-41089.zip">
+           href="https://github.com/HydraSoft/HydraSoft-DLL-Hijack-Scanner/releases/latest/download/HydraSoft.zip">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-          Download PoC Scanner
+          Download Release
         </a>
         <a class="btn btn-secondary"
-           href="https://github.com/HydraSoft/CVE-2026-41089-Netlogon-RCE">
+           href="https://github.com/HydraSoft/HydraSoft-DLL-Hijack-Scanner">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.395-.135-.345-.72-1.395-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-          View on GitHub
+          View Source
         </a>
       </div>
     </header>
 
-    <!-- Banner -->
     <div class="banner-wrap reveal">
-      <img src="https://github.com/HydraSoft/CVE-2026-41089-Netlogon-RCE/raw/main/banner.png"
-           alt="CVE-2026-41089 — Netlogon RCE vulnerability banner"
-           onerror="this.style.display='none'">
+      <img src="https://raw.githubusercontent.com/HydraSoft/HydraSoft-DLL-Hijack-Scanner/master/Robber.png"
+           alt="HydraSoft GUI — DLL hijack scan results tree view">
       <div class="banner-overlay"></div>
     </div>
 
-    <!-- Stats -->
     <div class="stats-strip reveal">
       <div class="stat">
-        <div class="stat-num" data-count="9.8">0</div>
-        <div class="stat-label">CVSS Score</div>
+        <div class="stat-num green">Zero</div>
+        <div class="stat-label">Dependencies</div>
       </div>
       <div class="stat">
-        <div class="stat-num cyan" data-count="0">0</div>
-        <div class="stat-label">Auth Required</div>
+        <div class="stat-num" data-count="2">0</div>
+        <div class="stat-label">Modes (GUI + CLI)</div>
       </div>
       <div class="stat">
-        <div class="stat-num green" data-count="528">0</div>
-        <div class="stat-label">Buffer Bytes</div>
+        <div class="stat-num cyan">PE</div>
+        <div class="stat-label">Import Analysis</div>
       </div>
       <div class="stat">
-        <div class="stat-num" data-count="389">0</div>
-        <div class="stat-label">UDP Port</div>
+        <div class="stat-num" data-count="3">0</div>
+        <div class="stat-label">Rating Levels</div>
       </div>
     </div>
 
-    <!-- Overview -->
     <section id="overview" class="reveal">
       <div class="section-label">// Conceptual Overview</div>
-      <h2>🧠 What Is CVE-2026-41089?</h2>
+      <h2>🧠 What Is HydraSoft?</h2>
       <p>
-        A technical breakdown of an exceptionally critical vulnerability residing deep within the
-        <strong>Windows Netlogon</strong> service. The flaw is rooted in a severe
-        <strong>stack-based buffer overflow</strong> (CWE-121). By sending specially crafted CLDAP
-        requests to a vulnerable Domain Controller, an unauthenticated attacker can force memory
-        corruption and potentially execute arbitrary code at SYSTEM level.
+        A fast, dependency-free, open-source tool to hunt for <strong>DLL hijacking vulnerabilities</strong>
+        across Windows environments. When applications load DLLs, Windows follows a strict search order —
+        executable directory first, then System32, Windows folder, and PATH variables.
+      </p>
+      <p>
+        If an application loads a DLL that doesn't exist in a protected system directory, and you have
+        write permissions to an earlier directory in that chain, you can drop a malicious payload.
+        HydraSoft automates this discovery: it walks directory trees, parses PE import tables,
+        cross-references files on disk, and pinpoints exact hijacking opportunities.
       </p>
 
       <div class="quote">
-        <em>"He who controls Netlogon, controls the kingdom."</em>
+        <em>"Find the missing link in the execution chain."</em>
         <p style="margin:0">
-          Zero user interaction. Zero prior authentication. A direct, frictionless path to complete
-          Active Directory compromise — a prime target for APTs and ransomware syndicates.
+          Instead of manually running Process Monitor and sifting through thousands of
+          <code>NAME NOT FOUND</code> events, HydraSoft statically analyzes binaries at rest
+          and delivers immediate, actionable intelligence for Red Team operations.
         </p>
       </div>
     </section>
 
-    <!-- Specs -->
-    <section id="specs" class="reveal">
-      <div class="section-label">// Vulnerability Specifications</div>
-      <h2>📊 Technical Details</h2>
-
-      <div class="spec-grid">
-        <div class="spec-card">
-          <div class="spec-label">CVE Identifier</div>
-          <div class="spec-value">CVE-2026-41089</div>
-          <p class="spec-note">Officially tracked — May 2026 Patch Tuesday</p>
-        </div>
-        <div class="spec-card">
-          <div class="spec-label">Severity Score</div>
-          <div class="spec-value">Critical — CVSS 9.8</div>
-          <div class="cvss-bar-wrap">
-            <div class="cvss-bar"><div class="cvss-fill" id="cvss-fill"></div></div>
-          </div>
-        </div>
-        <div class="spec-card">
-          <div class="spec-label">Vulnerability Type</div>
-          <div class="spec-value">CWE-121</div>
-          <p class="spec-note">Stack-based Buffer Overflow</p>
-        </div>
-        <div class="spec-card">
-          <div class="spec-label">Affected Component</div>
-          <div class="spec-value">netlogon.dll</div>
-          <p class="spec-note">NetpLogonPutUnicodeString — CLDAP handler</p>
-        </div>
-        <div class="spec-card">
-          <div class="spec-label">Attack Vector</div>
-          <div class="spec-value">Network / UDP 389</div>
-          <p class="spec-note">Fully remote, unauthenticated CLDAP ping</p>
-        </div>
-        <div class="spec-card">
-          <div class="spec-label">Privileges Required</div>
-          <div class="spec-value">None</div>
-          <p class="spec-note">Unauthenticated — no credentials needed</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Attack flow -->
-    <section class="reveal">
-      <div class="section-label">// Attack Scenario</div>
-      <h2>🕸️ Attack Path Architecture</h2>
-      <p>From any foothold on the internal network, the path to domain compromise is dangerously short:</p>
-
-      <div class="flow">
-        <div class="flow-step">
-          <strong>1 · Unauthenticated Attacker</strong>
-          <span>Network access to internal VLAN — no credentials required</span>
-        </div>
-        <div class="flow-step">
-          <strong>2 · Locate Domain Controller</strong>
-          <span>DNS SRV records, LDAP, or subnet scanning for UDP/TCP 389</span>
-        </div>
-        <div class="flow-step">
-          <strong>3 · Crafted CLDAP Packet</strong>
-          <span>Oversized User field + NtVer legacy path → netlogon.dll</span>
-        </div>
-        <div class="flow-step">
-          <strong>4 · Stack Buffer Overflow</strong>
-          <span>528-byte stack buffer exceeded → memory corruption in LSASS</span>
-        </div>
-        <div class="flow-step">
-          <strong>5 · Arbitrary Code Execution</strong>
-          <span>SYSTEM-level privileges on the Domain Controller</span>
-        </div>
-        <div class="flow-step">
-          <strong>6 · Full AD Compromise</strong>
-          <span>NTDS.dit access, Golden Tickets, lateral movement across the estate</span>
-        </div>
-      </div>
-
-      <h3>💡 Why This Matters</h3>
-      <ul class="checklist">
-        <li><strong>Domain Takeover:</strong> Immediate escalation to Domain Admin privileges.</li>
-        <li><strong>Credential Harvesting:</strong> Direct access to the NTDS.dit database.</li>
-        <li><strong>Lateral Movement:</strong> Unfettered access to all domain-joined endpoints.</li>
-        <li><strong>Persistence:</strong> Golden Tickets, shadow credentials, rogue DC injection.</li>
-      </ul>
-    </section>
-
-    <!-- Usage -->
-    <section id="usage" class="reveal">
-      <div class="section-label">// Quick Start Guide</div>
-      <h2>🚀 PoC Usage</h2>
+    <section id="gui" class="reveal">
+      <div class="section-label">// Graphical Interface</div>
+      <h2>🖥️ GUI Mode</h2>
       <p>
-        Python-based diagnostic script to test domain controllers for susceptibility to the
-        Netlogon CLDAP overflow. Use only on systems you own or have written authorization to test.
+        Point the GUI at a target directory and hit <strong>Scan</strong>. As HydraSoft parses executables,
+        results populate the tree view in real-time. Expand any vulnerable executable to inspect
+        hijackable DLLs, exported methods to proxy, and the full search-order path with writability flags.
+      </p>
+
+      <h3>🎨 Complexity Rating System</h3>
+      <p>Color-coded ratings help prioritize targets for crafting proxy DLLs:</p>
+
+      <div class="rating-grid">
+        <div class="rating-card best">
+          <div class="rating-head">
+            <span class="rating-dot best"></span>
+            <span class="rating-title">🟢 Best</span>
+          </div>
+          <p class="rating-desc">
+            Few imported functions and a small binary footprint. Incredibly easy to build a proxy DLL
+            that stubs out the required exports.
+          </p>
+        </div>
+        <div class="rating-card good">
+          <div class="rating-head">
+            <span class="rating-dot good"></span>
+            <span class="rating-title">🟡 Good</span>
+          </div>
+          <p class="rating-desc">
+            Moderate complexity. Requires slightly more effort to map exports without crashing
+            the host application.
+          </p>
+        </div>
+        <div class="rating-card bad">
+          <div class="rating-head">
+            <span class="rating-dot bad"></span>
+            <span class="rating-title">🔴 Bad</span>
+          </div>
+          <p class="rating-desc">
+            Massive imports or very large binary. Extremely difficult to proxy effectively
+            without causing execution instability.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="cli" class="reveal">
+      <div class="section-label">// Quick Start — CLI</div>
+      <h2>🚀 Command Line Interface</h2>
+      <p>
+        For automation pipelines and headless environments. Progress routes to
+        <code>stderr</code>; clean JSON/CSV results go to <code>stdout</code> — fully pipe-friendly.
       </p>
 
       <div class="code-wrap">
         <div class="code-header">
           <div class="code-dots"><span></span><span></span><span></span></div>
-          <span class="code-title">bash — terminal</span>
-          <button class="copy-btn" data-target="code-usage">Copy</button>
+          <span class="code-title">HydraSoft.exe — options</span>
+          <button class="copy-btn" data-target="code-options">Copy</button>
         </div>
-        <pre id="code-usage"><span class="c-comment"># 1. Safe connectivity check (short username, no overflow)</span>
-<span class="c-cmd">python3</span> CVE-2026-41089.py <span class="c-ip">10.0.50.21</span> <span class="c-val">corp.local</span> <span class="c-flag">-l</span> <span class="c-val">10</span>
+        <pre id="code-options"><span class="c-cmd">HydraSoft.exe</span> <span class="c-flag">--path</span> &lt;dir&gt; [options]
 
-<span class="c-comment"># 2. Default vulnerability check (300 chars, overflows 528-byte buffer)</span>
-<span class="c-cmd">python3</span> CVE-2026-41089.py <span class="c-ip">10.0.50.21</span> <span class="c-val">corp.local</span>
+<span class="c-flag">--path</span> &lt;dir&gt;               Directory to scan (required)
+<span class="c-flag">--output</span> &lt;file&gt;            Write to file (.json or .csv). Default: stdout
+<span class="c-flag">--image-type</span> any|x86|x64   Filter by architecture
+<span class="c-flag">--sign</span> any|signed          Filter by digital signature status
+<span class="c-flag">--rate</span> any|best|good|bad   Filter by complexity rating
+<span class="c-flag">--write-perm</span>               Only show writable target directories
+<span class="c-flag">--best-dll-count</span> &lt;n&gt;       Default: 2
+<span class="c-flag">--best-exe-size</span> &lt;n&gt;        KB threshold (default: 10240)
+<span class="c-flag">--help</span></pre>
+      </div>
 
-<span class="c-comment"># 3. Custom payload with legacy NtVer and extended timeout</span>
-<span class="c-cmd">python3</span> CVE-2026-41089.py <span class="c-ip">10.0.50.21</span> <span class="c-val">corp.local</span> <span class="c-flag">-l</span> <span class="c-val">300</span> <span class="c-flag">-n</span> <span class="c-val">0x02000000</span> <span class="c-flag">-t</span> <span class="c-val">10</span></pre>
+      <h3>💻 Example Invocations</h3>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-title">bash — examples</span>
+          <button class="copy-btn" data-target="code-examples">Copy</button>
+        </div>
+        <pre id="code-examples"><span class="c-comment"># Hunt for best, easily exploitable targets → JSON</span>
+<span class="c-cmd">HydraSoft.exe</span> <span class="c-flag">--path</span> <span class="c-path">"C:\Program Files"</span> <span class="c-flag">--rate</span> best <span class="c-flag">--output</span> hits.json
+
+<span class="c-comment"># Pipe to jq for vulnerable exe paths</span>
+<span class="c-cmd">HydraSoft.exe</span> <span class="c-flag">--path</span> <span class="c-path">"C:\Program Files"</span> | jq <span class="c-val">'.[].exePath'</span>
+
+<span class="c-comment"># Signed binaries in writable dirs (persistence / bypass)</span>
+<span class="c-cmd">HydraSoft.exe</span> <span class="c-flag">--path</span> <span class="c-path">"C:\Tools"</span> <span class="c-flag">--sign</span> signed <span class="c-flag">--write-perm</span></pre>
       </div>
     </section>
 
-    <!-- Detection -->
     <section class="reveal">
-      <div class="section-label">// Threat Hunting</div>
-      <h2>🛡️ Detection &amp; IoCs</h2>
-      <p>Monitor the following high-fidelity indicators in your environment:</p>
+      <div class="section-label">// System Architecture</div>
+      <h2>📊 Scan Pipeline</h2>
 
-      <div class="ioc-box">
-        <span class="warn">[!]</span> Unexpected Netlogon service crashes or spontaneous DC restarts<br>
-        <span class="warn">[!]</span> Event ID 1000 — lsass.exe faulting module netlogon.dll, exception 0xc0000409<br>
-        <span class="warn">[!]</span> Abnormal process spawning directly from lsass.exe<br>
-        <span class="warn">[!]</span> Spikes in malformed CLDAP requests on UDP port 389<br>
-        <span class="warn">[!]</span> Unrecognized authentication anomalies in Windows Event Logs<br>
-        <span class="warn">[!]</span> Suspicious RPC traffic directed at Domain Controllers
+      <div class="flow">
+        <div class="flow-step">
+          <strong>1 · Target Directory</strong>
+          <span>Recursive walk of executables and PE binaries</span>
+        </div>
+        <div class="flow-step">
+          <strong>2 · PE Parser Engine</strong>
+          <span>Extract standard &amp; delayed imports · parse UAC manifest</span>
+        </div>
+        <div class="flow-step">
+          <strong>3 · System DLL Filter</strong>
+          <span>Exclude System32 / SysWOW64 false positives</span>
+        </div>
+        <div class="flow-step">
+          <strong>4 · Search Order + Writability</strong>
+          <span>Evaluate DLL load path · check directory permissions</span>
+        </div>
+        <div class="flow-step">
+          <strong>5 · Export JSON/CSV / GUI</strong>
+          <span>Apply complexity rating · render actionable results</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="reveal">
+      <div class="section-label">// Key Features</div>
+      <h2>✨ Smart Filtering</h2>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🛡️</div>
+          <h3>UAC Elevation Detection</h3>
+          <p>
+            Parses application manifests. Binaries requiring <code>requireAdministrator</code> or
+            <code>highestAvailable</code> are flagged — hijacking them is a direct
+            <strong>privilege escalation</strong> vector.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🧠</div>
+          <h3>False-Positive Reduction</h3>
+          <p>
+            Automatically excludes known system DLLs from System32, SysWOW64, and Windows\System.
+            Analyzes both standard and <em>delayed</em> imports.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📁</div>
+          <h3>Writability Checks</h3>
+          <p>
+            <code>--write-perm</code> filters to hijack targets where you can actually drop a payload
+            — no theoretical-only results.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Pipe-Friendly CLI</h3>
+          <p>
+            Progress on stderr, structured JSON/CSV on stdout. Integrates cleanly with
+            automation, CI pipelines, and <code>jq</code>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <div class="section-label">// Build Requirements</div>
+      <h2>🧰 Technical Specifications</h2>
+
+      <div class="spec-grid">
+        <div class="spec-card">
+          <div class="spec-label">Language</div>
+          <div class="spec-value">Delphi</div>
+          <p class="spec-note">Native Windows, no runtime dependencies</p>
+        </div>
+        <div class="spec-card">
+          <div class="spec-label">Compiler</div>
+          <div class="spec-value">Delphi XE2+</div>
+          <p class="spec-note">Open Robber\Robber.dproj and build</p>
+        </div>
+        <div class="spec-card">
+          <div class="spec-label">Output Formats</div>
+          <div class="spec-value">JSON · CSV · GUI</div>
+          <p class="spec-note">CLI and graphical modes included</p>
+        </div>
+        <div class="spec-card">
+          <div class="spec-label">License</div>
+          <div class="spec-value">Open Source</div>
+          <p class="spec-note">Fork · contribute · maintain zero-deps policy</p>
+        </div>
       </div>
 
-      <h3>📈 Recommended Log Sources</h3>
-      <ul class="checklist">
-        <li>Windows Security &amp; Application Event Logs (service crashes, logon failures)</li>
-        <li>Microsoft Defender for Identity / Defender for Endpoint</li>
-        <li>Sysmon — Process Creation &amp; Network Connections</li>
-        <li>SIEM alerting rules for DC RPC/CLDAP traffic anomalies</li>
-      </ul>
+      <h3>Contribution Guidelines</h3>
+      <ol class="contrib-steps">
+        <li>Fork the repository on GitHub.</li>
+        <li>Submit PRs focused on performance improvements or Delphi UI enhancements.</li>
+        <li>Strictly maintain the dependency-free nature of the project.</li>
+      </ol>
     </section>
 
-    <!-- Mitigation -->
-    <section id="mitigation" class="reveal">
-      <div class="section-label">// Mitigation Strategy</div>
-      <h2>🛠️ Immediate Actions</h2>
-      <ul class="checklist mitigation">
-        <li><strong>Apply Microsoft Patches:</strong> Install May 2026 Patch Tuesday updates on all Domain Controllers immediately.</li>
-        <li><strong>Restrict Network Access:</strong> Limit UDP 389 / Netlogon RPC to authorized subnets via firewall rules.</li>
-        <li><strong>Enable EDR Visibility:</strong> Apply aggressive monitoring policies to the <code>lsass.exe</code> process.</li>
-        <li><strong>Validate AD Integrity:</strong> Audit Domain Admin groups and check for shadow credentials.</li>
-        <li><strong>Verify Patch Status:</strong> Compare <code>netlogon.dll</code> hash and KB installation across all DCs.</li>
-      </ul>
-    </section>
-
-    <!-- Legal -->
     <section id="legal" class="reveal">
       <div class="section-label">// License &amp; Legal</div>
       <h2>⚖️ Disclaimer</h2>
       <div class="disclaimer">
         <p>
-          <strong>This vulnerability analysis and associated PoC code are provided for authorized defensive research and system administration only.</strong>
-          Exploiting CVE-2026-41089 on systems or networks without explicit, written authorization is strictly illegal.
-          The author assumes <strong>no liability</strong> for any misuse of this information.
-          Ransomware deployment, unauthorized lateral movement, and Active Directory manipulation carry severe legal consequences.
-          Always patch early and test responsibly in isolated laboratory environments.
+          <strong>This tool is provided strictly for authorized vulnerability research, system administration, and ethical hacking engagements.</strong>
+          Identifying and exploiting DLL hijacking vulnerabilities without explicit, written permission
+          from the system owner is illegal and unethical. The author assumes <strong>no liability</strong>
+          for misuse, including unauthorized privilege escalation or persistence on production systems.
+          Always operate within a defined engagement scope.
         </p>
       </div>
     </section>
@@ -1082,18 +802,17 @@
   </div>
 
   <footer>
-    <strong>⭐ Stay Secure. Patch Early. Monitor Continuously.</strong>
-    <em>Made with ❤️ for the Cybersecurity Community — HydraSoft</em>
+    <strong>HydraSoft — Systematically dismantling Windows execution chains.</strong>
+    <em>Made with ❤️ for the Cybersecurity Community</em>
   </footer>
 
-  <!-- Auto-download countdown toast -->
   <div class="dl-toast" id="dl-toast" role="status" aria-live="polite">
     <div class="dl-toast-icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
     </div>
     <div class="dl-toast-body">
       <div class="dl-toast-title">Auto-download starting…</div>
-      <div class="dl-toast-sub">CVE-2026-41089.zip in <strong id="dl-countdown">5</strong>s</div>
+      <div class="dl-toast-sub">HydraSoft.zip in <strong id="dl-countdown">5</strong>s</div>
     </div>
     <div class="dl-toast-actions">
       <button class="dl-toast-btn dl-toast-btn-cancel" id="dl-cancel" type="button">Cancel</button>
@@ -1103,27 +822,22 @@
   </div>
 
   <script>
-    const DOWNLOAD_URL = 'https://github.com/HydraSoft/CVE-2026-41089-Netlogon-RCE/releases/download/CVE-2026-41089-PoC-(Fixed)/CVE-2026-41089.zip';
+    const DOWNLOAD_URL = 'https://github.com/HydraSoft/HydraSoft-DLL-Hijack-Scanner/releases/latest/download/HydraSoft.zip';
+    const DOWNLOAD_NAME = 'HydraSoft.zip';
     const AUTO_DOWNLOAD_DELAY = 5;
 
-    /* ── Floating particles ── */
     (function () {
       const canvas = document.getElementById('particles');
       const ctx = canvas.getContext('2d');
       let W, H, dots;
 
-      function resize() {
-        W = canvas.width = window.innerWidth;
-        H = canvas.height = window.innerHeight;
-      }
+      function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
 
       function init() {
         dots = Array.from({ length: 60 }, () => ({
-          x: Math.random() * W,
-          y: Math.random() * H,
+          x: Math.random() * W, y: Math.random() * H,
           r: Math.random() * 1.5 + 0.5,
-          dx: (Math.random() - 0.5) * 0.4,
-          dy: (Math.random() - 0.5) * 0.4,
+          dx: (Math.random() - 0.5) * 0.4, dy: (Math.random() - 0.5) * 0.4,
           a: Math.random() * 0.5 + 0.1,
         }));
       }
@@ -1146,60 +860,37 @@
       resize(); init(); draw();
     })();
 
-    /* ── Scroll reveal ── */
-    const reveals = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          if (e.target.querySelector('#cvss-fill')) {
-            document.getElementById('cvss-fill').classList.add('animated');
-          }
-        }
-      });
-    }, { threshold: 0.12 });
-    reveals.forEach(el => observer.observe(el));
+    document.querySelectorAll('.reveal').forEach(el => {
+      new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+      }, { threshold: 0.12 }).observe(el);
+    });
 
-    /* ── Animated counters ── */
-    function animateCounter(el, target, decimals = 0, suffix = '') {
+    function animateCounter(el, target) {
       const duration = 1400;
       const start = performance.now();
-      const isZero = target === 0;
-
       function step(now) {
         const p = Math.min((now - start) / duration, 1);
-        const ease = 1 - Math.pow(1 - p, 3);
-        if (isZero) {
-          el.textContent = p >= 1 ? 'None' : '';
-        } else {
-          const val = ease * target;
-          el.textContent = decimals ? val.toFixed(decimals) + suffix : Math.floor(val) + suffix;
-        }
+        el.textContent = Math.floor((1 - Math.pow(1 - p, 3)) * target);
         if (p < 1) requestAnimationFrame(step);
       }
       requestAnimationFrame(step);
     }
 
-    const statsObs = new IntersectionObserver(entries => {
+    new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (!e.isIntersecting) return;
         e.target.querySelectorAll('[data-count]').forEach(el => {
           if (el.dataset.done) return;
           el.dataset.done = '1';
-          const n = parseFloat(el.dataset.count);
-          animateCounter(el, n, n % 1 !== 0 ? 1 : 0);
+          animateCounter(el, parseFloat(el.dataset.count));
         });
-        statsObs.unobserve(e.target);
       });
-    }, { threshold: 0.5 });
+    }, { threshold: 0.5 }).observe(document.querySelector('.stats-strip'));
 
-    document.querySelectorAll('.stats-strip').forEach(el => statsObs.observe(el));
-
-    /* ── Copy button ── */
     document.querySelectorAll('.copy-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        const pre = document.getElementById(btn.dataset.target);
-        navigator.clipboard.writeText(pre.innerText).then(() => {
+        navigator.clipboard.writeText(document.getElementById(btn.dataset.target).innerText).then(() => {
           btn.textContent = 'Copied!';
           btn.classList.add('copied');
           setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
@@ -1207,11 +898,10 @@
       });
     });
 
-    /* ── Download helper ── */
     function triggerDownload() {
       const a = document.createElement('a');
       a.href = DOWNLOAD_URL;
-      a.setAttribute('download', 'CVE-2026-41089.zip');
+      a.setAttribute('download', DOWNLOAD_NAME);
       a.rel = 'noopener noreferrer';
       document.body.appendChild(a);
       a.click();
@@ -1223,20 +913,15 @@
       setTimeout(() => { this.style.transform = ''; }, 150);
     });
 
-    /* ── Auto-download after 5 seconds ── */
     (function () {
       const toast = document.getElementById('dl-toast');
       const countdownEl = document.getElementById('dl-countdown');
-      const cancelBtn = document.getElementById('dl-cancel');
-      const nowBtn = document.getElementById('dl-now');
-      let remaining = AUTO_DOWNLOAD_DELAY;
-      let cancelled = false;
-      let done = false;
+      let remaining = AUTO_DOWNLOAD_DELAY, cancelled = false, done = false;
 
       function finishToast(message) {
         toast.classList.add('done');
         toast.querySelector('.dl-toast-title').textContent = message;
-        toast.querySelector('.dl-toast-sub').innerHTML = '<strong>CVE-2026-41089.zip</strong>';
+        toast.querySelector('.dl-toast-sub').innerHTML = `<strong>${DOWNLOAD_NAME}</strong>`;
         toast.querySelector('.dl-toast-actions').style.display = 'none';
         setTimeout(() => toast.classList.remove('visible'), 3000);
       }
@@ -1254,20 +939,17 @@
         if (cancelled || done) { clearInterval(tick); return; }
         remaining -= 1;
         countdownEl.textContent = remaining;
-        if (remaining <= 0) {
-          clearInterval(tick);
-          startDownload();
-        }
+        if (remaining <= 0) { clearInterval(tick); startDownload(); }
       }, 1000);
 
-      cancelBtn.addEventListener('click', () => {
+      document.getElementById('dl-cancel').addEventListener('click', () => {
         if (done) return;
         cancelled = true;
         clearInterval(tick);
         finishToast('Auto-download cancelled');
       });
 
-      nowBtn.addEventListener('click', () => {
+      document.getElementById('dl-now').addEventListener('click', () => {
         if (cancelled || done) return;
         clearInterval(tick);
         startDownload();
