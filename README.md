@@ -1,6 +1,7 @@
 <article class="markdown-body entry-content container-lg" itemprop="text">
   <h1>🔓 Advanced DLL Hijack Scanner & Centralized Endpoint Management</h1>
 
+
   <p><strong>Streamlined Vulnerability Discovery for Windows Privilege Escalation</strong></p>
  <hr>
   <p>
