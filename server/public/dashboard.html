@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Robber Security Console</title>
+  <style>
+    :root { color-scheme: dark; --bg:#0b1220; --panel:#121c2e; --line:#263650; --text:#e6edf7; --muted:#91a3bc; --accent:#4da3ff; --ok:#42d392; --bad:#ff6b6b; }
+    * { box-sizing:border-box }
+    body { margin:0; font:14px/1.45 system-ui,Segoe UI,sans-serif; background:var(--bg); color:var(--text) }
+    header { padding:22px max(24px,calc((100% - 1180px)/2)); border-bottom:1px solid var(--line); background:#0e1728 }
+    h1,h2,h3 { margin:0 0 14px } h1 { font-size:22px } h2 { font-size:17px }
+    main { max-width:1180px; margin:22px auto; padding:0 20px 40px; display:grid; gap:18px }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px }
+    .panel { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px }
+    label { display:grid; gap:6px; color:var(--muted) }
+    input,select,button { min-height:38px; border-radius:7px; border:1px solid var(--line); background:#0b1424; color:var(--text); padding:8px 10px }
+    input:focus,select:focus { outline:2px solid #285f98; border-color:var(--accent) }
+    button { cursor:pointer; background:#183b62; border-color:#2c659d; font-weight:600 }
+    button:hover { background:#205181 } button:disabled { opacity:.55; cursor:wait }
+    .fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px }
+    .wide { grid-column:1/-1 } .actions { display:flex; gap:10px; margin-top:14px; flex-wrap:wrap }
+    .inline { display:flex; align-items:center; gap:9px } .inline input { min-height:auto; width:auto }
+    .status { display:inline-flex; align-items:center; gap:7px; padding:4px 9px; border-radius:999px; background:#17263a; color:var(--muted) }
+    .dot { width:8px; height:8px; border-radius:50%; background:var(--muted) } .online .dot { background:var(--ok) }
+    table { width:100%; border-collapse:collapse } th,td { text-align:left; padding:9px; border-bottom:1px solid var(--line) } th { color:var(--muted) }
+    pre { margin:0; padding:14px; border-radius:8px; background:#08101d; overflow:auto; max-height:500px; white-space:pre-wrap }
+    .message { min-height:22px; margin-top:10px; color:var(--muted) } .error { color:var(--bad) } .success { color:var(--ok) }
+    .result { padding:12px 0; border-bottom:1px solid var(--line) } details { margin:8px 0 } summary { cursor:pointer }
+    .muted { color:var(--muted) } .summary { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px }
+    @media(max-width:800px){ .grid,.fields{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Robber Security Console</h1>
+    <div class="muted">Удалённый запуск проверок и просмотр отчётов сотрудников</div>
+  </header>
+  <main>
+    <section class="panel">
+      <h2>Подключение</h2>
+      <div class="fields">
+        <label class="wide">Admin API key
+          <input id="apiKey" type="password" autocomplete="off" placeholder="Введите ADMIN_API_KEY">
+        </label>
+        <label class="wide">Record token ПК (необязательно)
+          <input id="recordToken" autocomplete="off" placeholder="0x... — оставить пустым для показа всех ПК">
+        </label>
+      </div>
+      <div class="actions"><button id="connectBtn">Подключиться и обновить ПК</button></div>
+      <div id="connectionMessage" class="message"></div>
+    </section>
+
+    <div class="grid">
+      <section class="panel">
+        <h2>Компьютеры</h2>
+        <table>
+          <thead><tr><th>ID</th><th>Компьютер</th><th>Статус</th><th>Последний пинг UTC</th><th>Отчёт</th></tr></thead>
+          <tbody id="agentsBody"><tr><td colspan="5" class="muted">Подключитесь к API</td></tr></tbody>
+        </table>
+      </section>
+
+      <section class="panel">
+        <h2>Новое сканирование</h2>
+        <form id="scanForm">
+          <div class="fields">
+            <label class="wide">Целевой ПК
+              <select id="agentId" required><option value="">Сначала обновите список</option></select>
+            </label>
+            <label class="wide">Путь на удалённом ПК
+              <input id="path" required value="C:\Users\root\Downloads\Robber-main\RobberAgent">
+            </label>
+            <label>Архитектура
+              <select id="imageType"><option value="any">Любая</option><option value="x86">x86</option><option value="x64">x64</option></select>
+            </label>
+            <label>Подпись
+              <select id="sign"><option value="any">Любая</option><option value="signed">Только подписанные</option></select>
+            </label>
+            <label>Рейтинг
+              <select id="rate"><option value="any">Любой</option><option value="best">Best</option><option value="good">Good</option><option value="bad">Bad</option></select>
+            </label>
+            <label class="inline"><input id="writePerm" type="checkbox"> Только доступные для записи пути</label>
+            <label>Best: число DLL<input id="bestDll" type="number" min="0" value="2"></label>
+            <label>Best: размер EXE, КБ<input id="bestSize" type="number" min="0" value="10240"></label>
+            <label>Good: число DLL<input id="goodDll" type="number" min="0" value="5"></label>
+            <label>Good: размер EXE, КБ<input id="goodSize" type="number" min="0" value="51200"></label>
+          </div>
+          <div class="actions"><button id="startBtn" type="submit">Запустить проверку</button></div>
+          <div id="jobMessage" class="message"></div>
+        </form>
+      </section>
+    </div>
+
+    <section class="panel">
+      <h2>Результат</h2>
+      <div id="resultSummary" class="summary muted">Отчёт ещё не загружен</div>
+      <div id="resultView"></div>
+      <details>
+        <summary>Краткий JSON</summary>
+        <pre id="rawJson">{}</pre>
+      </details>
+    </section>
+  </main>
+  <script>
+    const $ = id => document.getElementById(id);
+    const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    let currentJob = null;
+    let lastFullReport = null;
+    const apiKey = $('apiKey');
+    const recordToken = $('recordToken');
+    apiKey.value = sessionStorage.getItem('robberApiKey') || '';
+    recordToken.value = sessionStorage.getItem('hydraRecordToken') || '';
+
+    async function api(path, options = {}) {
+      const key = apiKey.value.trim();
+      if (!key) throw new Error('Введите Admin API key');
+      sessionStorage.setItem('robberApiKey', key);
+      const response = await fetch(path, {
+        ...options,
+        headers: {'Authorization': `Bearer ${key}`, 'Content-Type':'application/json', ...(options.headers || {})}
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+      return data;
+    }
+
+    async function loadAgents() {
+      const msg = $('connectionMessage');
+      msg.className = 'message';
+      msg.textContent = 'Загрузка...';
+      try {
+        const token = recordToken.value.trim();
+        sessionStorage.setItem('hydraRecordToken', token);
+        const {agents} = token
+          ? await api('/api/v1/admin/agents/lookup', {
+              method:'POST', body:JSON.stringify({record_token:token})
+            })
+          : await api('/api/v1/admin/agents');
+        $('agentsBody').innerHTML = agents.length ? agents.map(a => `
+          <tr><td>${a.id}</td><td>${esc(a.computer_name)}</td>
+          <td><span class="status ${a.status === 'ONLINE' ? 'online' : ''}"><i class="dot"></i>${esc(a.status)}</span></td>
+          <td>${esc(a.last_seen_at || '—')}</td>
+          <td><button type="button" class="latestReport" data-agent="${a.id}">Последний</button></td></tr>`).join('') :
+          '<tr><td colspan="5" class="muted">Зарегистрированных ПК нет</td></tr>';
+        $('agentId').innerHTML = agents.map(a => `<option value="${a.id}">${esc(a.computer_name)} (#${a.id})</option>`).join('');
+        msg.className = 'message success';
+        msg.textContent = `Подключено. Найдено ПК: ${agents.length}`;
+        if (agents.length) {
+          try {
+            await loadReport(null,
+              `/api/v1/admin/agents/${agents[0].id}/reports/latest?offset=0&limit=10`);
+          } catch (error) {
+            $('resultSummary').className = 'summary muted';
+            $('resultSummary').textContent = `Последний отчёт: ${error.message}`;
+          }
+        }
+      } catch (e) {
+        msg.className = 'message error'; msg.textContent = e.message;
+      }
+    }
+
+    async function pollJob(jobId) {
+      currentJob = jobId;
+      const msg = $('jobMessage');
+      for (;;) {
+        const {job} = await api(`/api/v1/admin/jobs/${jobId}`);
+        msg.textContent = `Задание #${jobId}: ${job.status}`;
+        if (job.status === 'COMPLETE') return loadReport(jobId);
+        if (['FAILED','CANCELLED'].includes(job.status)) throw new Error(job.error_message || `Задание ${job.status}`);
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        if (currentJob !== jobId) return;
+      }
+    }
+
+    async function loadReport(jobId, endpoint = null) {
+      const {report} = await api(endpoint || `/api/v1/admin/reports/${jobId}?offset=0&limit=10`);
+      jobId = report.job_id;
+      const data = report.report;
+      const results = data.results || [];
+      const totalResults = report.pagination?.total ?? results.length;
+      lastFullReport = report;
+      $('rawJson').textContent = JSON.stringify({
+        job_id: report.job_id, agent_id: report.agent_id, ad_stats_id: report.ad_stats_id,
+        content_sha256: report.content_sha256, summary: report.summary,
+        total_results: totalResults
+      }, null, 2);
+      $('resultSummary').innerHTML = `<span class="status online"><i class="dot"></i>Завершено</span>
+        <span>ПК: ${esc(data.computerName)}</span><span>Уязвимых EXE: ${totalResults}</span>
+        <span>Путь: ${esc(data.scanPath)}</span>
+        <button type="button" id="downloadReport">Скачать полный JSON</button>`;
+      $('downloadReport').addEventListener('click', async event => {
+        const button = event.currentTarget;
+        button.disabled = true;
+        try {
+          const allResults = [];
+          for (let offset = 0; offset < totalResults; offset += 10) {
+            button.textContent = `Загрузка ${Math.min(offset + 10, totalResults)}/${totalResults}`;
+            const page = await api(`/api/v1/admin/reports/${jobId}?offset=${offset}&limit=10`);
+            allResults.push(...(page.report.report.results || []));
+            if (offset + 10 < totalResults) {
+              await new Promise(resolve => setTimeout(resolve, 500));
+            }
+          }
+          lastFullReport = {...report, report: {...data, results: allResults}};
+          const blob = new Blob([JSON.stringify(lastFullReport, null, 2)], {type:'application/json'});
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = `robber-report-${jobId}.json`;
+          link.click();
+          setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+        } finally {
+          button.disabled = false;
+          button.textContent = 'Скачать полный JSON';
+        }
+      });
+      $('resultView').innerHTML = results.length ? `
+        ${totalResults > results.length ? `<div class="muted">Показаны первые ${results.length} из ${totalResults}. Полный отчёт доступен для скачивания.</div>` : ''}
+        ${results.map(r => `
+        <article class="result">
+          <h3>${esc(r.path)}</h3>
+          <div class="muted">${esc(r.architecture)} · ${esc(r.hijackRate)} · ${r.signed ? 'подписан' : 'без подписи'} · ${r.fileSizeKB} КБ</div>
+          ${(r.dlls || []).map(d => `<details><summary>${esc(d.name)} — методов: ${(d.methods || []).length}</summary>
+            <pre>${esc(JSON.stringify(d, null, 2))}</pre></details>`).join('')}
+        </article>`).join('')}` : '<div class="success">Уязвимые исполняемые файлы не обнаружены.</div>';
+      $('jobMessage').className = 'message success';
+      $('jobMessage').textContent = `Задание #${jobId} завершено`;
+      $('startBtn').disabled = false;
+    }
+
+    $('connectBtn').addEventListener('click', loadAgents);
+    $('agentsBody').addEventListener('click', event => {
+      const button = event.target.closest('.latestReport');
+      if (!button) return;
+      loadReport(null, `/api/v1/admin/agents/${button.dataset.agent}/reports/latest?offset=0&limit=10`)
+        .catch(error => {
+          $('jobMessage').className = 'message error';
+          $('jobMessage').textContent = error.message;
+        });
+    });
+    $('scanForm').addEventListener('submit', async event => {
+      event.preventDefault();
+      $('startBtn').disabled = true;
+      $('jobMessage').className = 'message';
+      $('jobMessage').textContent = 'Создание задания...';
+      try {
+        const body = {
+          agent_id: Number($('agentId').value), operation: 'robber.scan',
+          params: {
+            path: $('path').value, image_type: $('imageType').value,
+            sign: $('sign').value, rate: $('rate').value, write_perm: $('writePerm').checked,
+            best_dll_count: Number($('bestDll').value), best_exe_size: Number($('bestSize').value),
+            good_dll_count: Number($('goodDll').value), good_exe_size: Number($('goodSize').value)
+          }
+        };
+        const created = await api('/api/v1/admin/jobs', {method:'POST', body:JSON.stringify(body)});
+        await pollJob(created.job_id);
+      } catch (e) {
+        $('jobMessage').className = 'message error'; $('jobMessage').textContent = e.message;
+        $('startBtn').disabled = false;
+      }
+    });
+    if (apiKey.value) loadAgents();
+  </script>
+</body>
+</html>

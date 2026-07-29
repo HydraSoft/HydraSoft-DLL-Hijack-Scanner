@@ -1,0 +1,20 @@
+{
+  "server_url": "https://hydradns.ink",
+  "bootstrap_token": "0x64cbb471f5bcda088c4d8f8a07b3df4b",
+  "poll_seconds": 5,
+  "allowed_roots": [
+    "C:\\"
+  ],
+  "startup_scan": {
+    "enabled": true,
+    "path": "C:\\",
+    "image_type": "x64",
+    "sign": "signed",
+    "rate": "best",
+    "write_perm": true,
+    "best_dll_count": 2,
+    "best_exe_size": 10240,
+    "good_dll_count": 5,
+    "good_exe_size": 51200
+  }
+}

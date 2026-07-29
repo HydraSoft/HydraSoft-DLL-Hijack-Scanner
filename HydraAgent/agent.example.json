@@ -1,0 +1,8 @@
+{
+  "server_url": "https://login.hydrapanel.vip",
+  "poll_seconds": 15,
+  "allowed_roots": [
+    "C:\\Program Files",
+    "C:\\Program Files (x86)"
+  ]
+}

@@ -1,0 +1,47 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{D9A8562D-736E-4E4A-AC68-33B40DF8B9ED}</ProjectGuid>
+    <MainSource>RobberAgent.dpr</MainSource>
+    <Base>true</Base>
+    <Config Condition="'$(Config)'==''">Release</Config>
+    <Platform Condition="'$(Platform)'==''">Win64</Platform>
+    <TargetedPlatforms>3</TargetedPlatforms>
+    <AppType>Console</AppType>
+    <FrameworkType>None</FrameworkType>
+    <ProjectVersion>20.4</ProjectVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Base)'!=''">
+    <DCC_Namespace>System;System.Win;Winapi;Data;Xml;$(DCC_Namespace)</DCC_Namespace>
+    <DCC_UnitSearchPath>..\Robber;..\Robber\PEParser;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+    <AppExecutionLevel>RUNASINVOKER</AppExecutionLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Config)'=='Release'">
+    <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
+    <DCC_DebugInformation>0</DCC_DebugInformation>
+    <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Config)'=='Debug'">
+    <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
+    <DCC_DebugInformation>2</DCC_DebugInformation>
+    <DCC_LocalDebugSymbols>true</DCC_LocalDebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <DelphiCompile Include="$(MainSource)">
+      <MainSource>MainSource</MainSource>
+    </DelphiCompile>
+    <DCCReference Include="AgentService.pas"/>
+    <DCCReference Include="AgentWorker.pas"/>
+    <DCCReference Include="AgentConfig.pas"/>
+    <DCCReference Include="PanelClient.pas"/>
+    <DCCReference Include="CredentialStore.pas"/>
+    <DCCReference Include="CommandRegistry.pas"/>
+    <DCCReference Include="..\Robber\ScanEngine.pas"/>
+    <DCCReference Include="..\Robber\ScanExport.pas"/>
+  </ItemGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Delphi.Personality.12</Borland.Personality>
+    <ProjectFileVersion>12</ProjectFileVersion>
+  </ProjectExtensions>
+  <Import Project="$(BDS)\Bin\CodeGear.Delphi.Targets"
+          Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')"/>
+</Project>

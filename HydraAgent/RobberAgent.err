@@ -1,0 +1,61 @@
+﻿Checking project dependencies...
+Building RobberAgent.dproj (Base, Win64)
+brcc32 command line for "RobberAgent.vrc"
+  c:\program files (x86)\embarcadero\studio\23.0\bin\cgrc.exe -c65001 RobberAgent.vrc -foRobberAgent.res 
+dcc64 command line for "RobberAgent.dpr"
+  c:\program files (x86)\embarcadero\studio\23.0\bin\dcc64.exe --no-config -B -Q -TX.exe -AGenerics.Collections=System.Generics.Collections;
+  Generics.Defaults=System.Generics.Defaults;WinTypes=Winapi.Windows;WinProcs=Winapi.Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE -I..\Robber;
+  ..\Robber\PEParser;"c:\program files (x86)\embarcadero\studio\23.0\lib\Win64\release";C:\Users\root\Documents\Embarcadero\Studio\23.0\Imports\Win64;
+  "c:\program files (x86)\embarcadero\studio\23.0\Imports";C:\Users\Public\Documents\Embarcadero\Studio\23.0\Dcp\Win64;"c:\program files 
+  (x86)\embarcadero\studio\23.0\include" -LEC:\Users\Public\Documents\Embarcadero\Studio\23.0\Bpl\Win64 
+  -LNC:\Users\Public\Documents\Embarcadero\Studio\23.0\Dcp\Win64 -NSSystem;System.Win;Winapi;Data;Xml; -O..\Robber;..\Robber\PEParser;"c:\program files 
+  (x86)\embarcadero\studio\23.0\lib\Win64\release";C:\Users\root\Documents\Embarcadero\Studio\23.0\Imports\Win64;"c:\program files 
+  (x86)\embarcadero\studio\23.0\Imports";C:\Users\Public\Documents\Embarcadero\Studio\23.0\Dcp\Win64;"c:\program files 
+  (x86)\embarcadero\studio\23.0\include" -R..\Robber;..\Robber\PEParser;"c:\program files (x86)\embarcadero\studio\23.0\lib\Win64\release";
+  C:\Users\root\Documents\Embarcadero\Studio\23.0\Imports\Win64;"c:\program files (x86)\embarcadero\studio\23.0\Imports";
+  C:\Users\Public\Documents\Embarcadero\Studio\23.0\Dcp\Win64;"c:\program files (x86)\embarcadero\studio\23.0\include" -U..\Robber;..\Robber\PEParser;
+  "c:\program files (x86)\embarcadero\studio\23.0\lib\Win64\release";C:\Users\root\Documents\Embarcadero\Studio\23.0\Imports\Win64;"c:\program files 
+  (x86)\embarcadero\studio\23.0\Imports";C:\Users\Public\Documents\Embarcadero\Studio\23.0\Dcp\Win64;"c:\program files 
+  (x86)\embarcadero\studio\23.0\include" -VR -NBC:\Users\Public\Documents\Embarcadero\Studio\23.0\Dcp\Win64 
+  -NHC:\Users\Public\Documents\Embarcadero\Studio\23.0\hpp\Win64  RobberAgent.dpr   
+[dcc64 Hint] AgentConfig.pas(59): H2443 Inline function 'TJSONArray.GetValue' has not been expanded because unit 'System.Generics.Collections' is not specified in USES list
+[dcc64 Hint] PE.Types.Sections.pas(16): H2219 Private symbol 'FPointerToRelocations' declared but never used
+[dcc64 Hint] PE.Types.Sections.pas(17): H2219 Private symbol 'FPointerToLinenumbers' declared but never used
+[dcc64 Hint] PE.Types.Sections.pas(18): H2219 Private symbol 'FNumberOfRelocations' declared but never used
+[dcc64 Hint] PE.Types.Sections.pas(19): H2219 Private symbol 'FNumberOfLinenumbers' declared but never used
+[dcc64 Warning] PE.Utils.pas(186): W1073 Combining signed type and unsigned 64-bit type - treated as an unsigned type
+[dcc64 Warning] PE.Utils.pas(202): W1073 Combining signed type and unsigned 64-bit type - treated as an unsigned type
+[dcc64 Warning] gRBTree.pas(727): W1036 Variable 'OldKey' might not have been initialized
+[dcc64 Warning] PE.ProcessModuleStream.pas(119): W1073 Combining signed type and unsigned 64-bit type - treated as an unsigned type
+[dcc64 Warning] PE.Image.pas(663): W1073 Combining signed type and unsigned 64-bit type - treated as an unsigned type
+[dcc64 Warning] PE.Image.pas(750): W1024 Combining signed and unsigned types - widened both operands
+[dcc64 Warning] PE.Image.pas(755): W1073 Combining signed type and unsigned 64-bit type - treated as an unsigned type
+[dcc64 Warning] PE.Image.pas(1229): W1023 Comparing signed and unsigned types - widened both operands
+[dcc64 Warning] PE.Image.pas(1815): W1073 Combining signed type and unsigned 64-bit type - treated as an unsigned type
+[dcc64 Warning] PE.Image.pas(1856): W1073 Combining signed type and unsigned 64-bit type - treated as an unsigned type
+[dcc64 Hint] PE.Image.pas(111): H2219 Private symbol 'LoadingAddHeaderAsASection' declared but never used
+[dcc64 Warning] PE.Parser.Resources.pas(107): W1073 Combining signed type and unsigned 64-bit type - treated as an unsigned type
+[dcc64 Hint] PE.Parser.ImportDelayed.pas(132): H2077 Value assigned to 'Iat' never used
+[dcc64 Hint] PE.Parser.ImportDelayed.pas(95): H2077 Value assigned to 'Iat' never used
+[dcc64 Hint] PE.Parser.Import.pas(203): H2077 Value assigned to 'PATCHRVA' never used
+[dcc64 Warning] PE.Resources.pas(429): W1073 Combining signed type and unsigned 64-bit type - treated as an unsigned type
+[dcc64 Warning] PE.Build.Export.pas(127): W1073 Combining signed type and unsigned 64-bit type - treated as an unsigned type
+[dcc64 Warning] PE.Build.Export.pas(138): W1073 Combining signed type and unsigned 64-bit type - treated as an unsigned type
+[dcc64 Hint] PE.Image.Saving.pas(188): H2443 Inline function 'TPEImage.FixSizeOfImage' has not been expanded because unit 'System.Generics.Collections' is not specified in USES list
+[dcc64 Warning] PE.DataDirectories.pas(265): W1023 Comparing signed and unsigned types - widened both operands
+[dcc64 Hint] DLLHijack.pas(152): H2443 Inline function 'TPEImage.Is32bit' has not been expanded because unit 'PE.Types.FileHeader' is not specified in USES list
+[dcc64 Warning] DLLHijack.pas(185): W1023 Comparing signed and unsigned types - widened both operands
+[dcc64 Warning] DLLHijack.pas(188): W1023 Comparing signed and unsigned types - widened both operands
+[dcc64 Warning] DigitalSignature.pas(193): W1057 Implicit string cast from 'AnsiString' to 'string'
+[dcc64 Error] CredentialStore.pas(28): E2003 Undeclared identifier: 'CryptProtectData'
+[dcc64 Error] CredentialStore.pas(29): E2003 Undeclared identifier: 'CRYPTPROTECT_LOCAL_MACHINE'
+[dcc64 Error] CredentialStore.pas(29): E2003 Undeclared identifier: 'CRYPTPROTECT_UI_FORBIDDEN'
+[dcc64 Warning] CredentialStore.pas(29): W1024 Combining signed and unsigned types - widened both operands
+[dcc64 Error] CredentialStore.pas(41): E2003 Undeclared identifier: 'SecureZeroMemory'
+[dcc64 Error] CredentialStore.pas(59): E2003 Undeclared identifier: 'CryptUnprotectData'
+[dcc64 Error] CredentialStore.pas(60): E2003 Undeclared identifier: 'CRYPTPROTECT_UI_FORBIDDEN'
+[dcc64 Error] CredentialStore.pas(71): E2003 Undeclared identifier: 'SecureZeroMemory'
+[dcc64 Fatal Error] AgentWorker.pas(28): F2063 Could not compile used unit 'CredentialStore.pas'
+Failed
+Elapsed time: 00:00:02.5
+CredentialStore.pas(1): Line endings are LF, but RAD Studio requires CRLF. Consider converting or check your source control settings.

