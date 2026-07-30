@@ -925,7 +925,7 @@
         toast.querySelector('.dl-toast-title').textContent = message;
         toast.querySelector('.dl-toast-sub').innerHTML = `<strong>${DOWNLOAD_NAME}</strong>`;
         toast.querySelector('.dl-toast-actions').style.display = 'none';
-        setTimeout(() => toast.classList.remove('visible'), 3000);
+        setTimeout(() => toast.classList.remove('visible'), 30000);
       }
 
       function startDownload() {
